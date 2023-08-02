@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="kd-cd-cosmic-tools-net">
+    <output-path>$PROJECT_DIR$/out/artifacts/kd_cd_cosmic_tools_net</output-path>
+    <root id="archive" name="kd-cd-cosmic-tools-net.jar">
+      <element id="module-output" name="kd-cd-cosmic-devtool-net" />
+    </root>
+  </artifact>
+</component>
