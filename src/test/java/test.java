@@ -1,5 +1,6 @@
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.cd.net.NullResponseException;
+import kd.cd.net.apachehttp.ApacheHttpSyncSender;
 import kd.cd.net.internal.RequestConfCache;
 import kd.cd.net.okhttp.OkHttpSingletonSyncSender;
 
@@ -12,6 +13,8 @@ public class test {
         if (conf.isNotConfigured()) {
             throw new IllegalStateException("");
         }
+
+        ApacheHttpSyncSender apacheHttpSyncSender = new ApacheHttpSyncSender();
 
         try {
             ObjectNode jsonNodes = OkHttpSingletonSyncSender.load()

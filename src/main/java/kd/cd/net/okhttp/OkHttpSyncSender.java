@@ -3,11 +3,9 @@ package kd.cd.net.okhttp;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.cd.net.ContentType;
 import kd.cd.net.Method;
-import kd.cd.net.NullResponseException;
 import kd.cd.net.RespHandle;
 import kd.cd.net.client.OkHttpClientUtils;
 import kd.cd.net.log.LogParam;
-import kd.cd.net.utils.OkHttpUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import org.apache.commons.io.IOUtils;
@@ -63,24 +61,24 @@ public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Respon
             return resp;
         }
 
-        public ObjectNode bodyToJson() throws IOException, NullResponseException {
+        public ObjectNode bodyToJson() throws IOException {
             return OkHttpUtils.bodyToJson(resp);
         }
 
-        public byte[] bodyToBytes() throws IOException, NullResponseException {
+        public byte[] bodyToBytes() throws IOException {
             return OkHttpUtils.bodyToBytes(resp);
         }
 
-        public InputStream bodyToByteStream() throws NullResponseException {
-            return OkHttpUtils.bodyToByteStream(resp);
-        }
-
-        public void writeTo(OutputStream outputStream) throws IOException, NullResponseException {
-            InputStream inputStream = bodyToByteStream();
+        public void writeTo(OutputStream outputStream) throws IOException {
+            InputStream inputStream = bodyToInputStream();
             IOUtils.copy(inputStream, outputStream);
         }
 
-        public String bodyToString() throws IOException, NullResponseException {
+        public InputStream bodyToInputStream() {
+            return OkHttpUtils.bodyToInputStream(resp);
+        }
+
+        public String bodyToString() throws IOException {
             return OkHttpUtils.bodyToString(resp);
         }
 

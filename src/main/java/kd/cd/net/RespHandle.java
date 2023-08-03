@@ -10,15 +10,15 @@ public interface RespHandle<R> {
 
     R response();
 
-    String bodyToString() throws IOException, NullResponseException;
+    String bodyToString() throws IOException;
 
-    ObjectNode bodyToJson() throws IOException, NullResponseException;
+    ObjectNode bodyToJson() throws IOException;
 
-    byte[] bodyToBytes() throws IOException, NullResponseException;
+    byte[] bodyToBytes() throws IOException;
 
-    InputStream bodyToByteStream() throws NullResponseException;
+    InputStream bodyToInputStream() throws IOException;
 
-    void writeTo(OutputStream outputStream) throws NullResponseException, IOException;
+    void writeTo(OutputStream outputStream) throws IOException;
 
     boolean isSuccessful();
 }

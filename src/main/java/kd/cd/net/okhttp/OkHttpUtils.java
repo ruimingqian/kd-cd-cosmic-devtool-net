@@ -1,10 +1,11 @@
-package kd.cd.net.utils;
+package kd.cd.net.okhttp;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.bos.logging.Log;
 import kd.bos.logging.LogFactory;
 import kd.cd.net.FailedResponseException;
 import kd.cd.net.NullResponseException;
+import kd.cd.net.utils.JacksonUtils;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -30,30 +31,30 @@ public final class OkHttpUtils {
     private OkHttpUtils() {
     }
 
-    public static ObjectNode bodyToJson(Response resp) throws IOException, NullResponseException {
+    public static ObjectNode bodyToJson(Response resp) throws IOException {
         String bodyString = bodyToString(resp);
         return StringUtils.isEmpty(bodyString) ? null : (ObjectNode) JacksonUtils.getObjectMapper().readTree(bodyString);
     }
 
-    public static String bodyToString(Response resp) throws IOException, NullResponseException {
+    public static String bodyToString(Response resp) throws IOException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.string();
     }
 
-    public static byte[] bodyToBytes(Response resp) throws IOException, NullResponseException {
+    public static byte[] bodyToBytes(Response resp) throws IOException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.bytes();
     }
 
-    public static InputStream bodyToByteStream(Response resp) throws NullResponseException {
+    public static InputStream bodyToInputStream(Response resp) {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.byteStream();
     }
 
-    public static void checkResp(Response resp) throws NullResponseException, FailedResponseException {
+    public static void checkResp(Response resp) {
         if (resp == null) {
             throw new NullResponseException("Okhttp response is null");
         }

@@ -4,7 +4,6 @@ import kd.bos.context.RequestContext;
 import kd.cd.net.AbstractNetTuplesFactory;
 import kd.cd.net.log.LogParam;
 import kd.cd.net.log.OkHttpLogger;
-import kd.cd.net.utils.OkHttpUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

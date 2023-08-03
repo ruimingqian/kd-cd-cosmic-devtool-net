@@ -7,7 +7,7 @@ package kd.cd.net;
  * @version 1.0
  * @see RuntimeException
  */
-public class NullResponseException extends Exception {
+public class NullResponseException extends RuntimeException {
     public NullResponseException() {
         super();
     }
