@@ -1,8 +1,6 @@
 package kd.cd.net.okhttp;
 
-import kd.cd.net.ContentType;
-import kd.cd.net.Method;
-import kd.cd.net.SynchronousSender;
+import kd.cd.net.*;
 import kd.cd.net.log.LogParam;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -13,7 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AbstractOkHttpSyncSender<T> implements SynchronousSender<T> {
+public abstract class AbstractOkHttpSyncSender<T> implements SyncRaw<T>, SyncUrlencoded<T>, SyncFormData<T> {
     protected OkHttpClient client;
 
     @Override

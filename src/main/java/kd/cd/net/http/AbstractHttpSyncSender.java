@@ -1,6 +1,6 @@
 package kd.cd.net.http;
 
-import kd.cd.net.SynchronousSender;
+import kd.cd.net.SyncRaw;
 
-public abstract class AbstractHttpSyncSender<T> implements SynchronousSender<T> {
+public abstract class AbstractHttpSyncSender<T> implements SyncRaw<T> {
 }
