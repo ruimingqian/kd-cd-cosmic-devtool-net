@@ -25,8 +25,9 @@ public class ApacheHttpClientUtils {
 
         RequestConfig requestConfig = RequestConfig.custom()
                 .setRedirectsEnabled(true)
-                .setConnectTimeout(CONNECT_TIMEOUT_SECONDS)
-                .setSocketTimeout(SOCKET_TIMEOUT_SECONDS).build();
+                .setConnectTimeout(CONNECT_TIMEOUT_SECONDS * 1000)
+                .setSocketTimeout(SOCKET_TIMEOUT_SECONDS * 1000)
+                .build();
         builder.setDefaultRequestConfig(requestConfig);
 
         ApacheHttpNetTuplesFactory af = ApacheHttpNetTuplesFactory.getInstance();

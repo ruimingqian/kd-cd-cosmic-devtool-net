@@ -29,7 +29,7 @@ public class ApacheHttpSingletonSyncSender extends ApacheHttpSyncSender {
 
     @Override
     public void close() {
-        //since is a sigleton instance, do nothing here
+        //since is a sigleton instance, you can't do this here
         throw new IllegalStateException("Do not support");
     }
 
