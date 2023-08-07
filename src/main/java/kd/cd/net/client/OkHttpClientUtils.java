@@ -1,6 +1,6 @@
 package kd.cd.net.client;
 
-import kd.cd.net.okhttp.OkHttpNetTuplesFactory;
+import kd.cd.net.okhttp.OkHttpNetFactory;
 import kd.cd.net.utils.SystemPropertyUtils;
 import okhttp3.OkHttpClient;
 
@@ -27,7 +27,7 @@ public class OkHttpClientUtils {
         builder.readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         builder.writeTimeout(WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
-        OkHttpNetTuplesFactory cf = OkHttpNetTuplesFactory.getInstance();
+        OkHttpNetFactory cf = OkHttpNetFactory.getInstance();
         if (ignoreSSL) {
             builder.sslSocketFactory(cf.newSSLSocketFactory(), cf.newX509TrustManager());
             builder.hostnameVerifier(cf.newTrustAllHostnameVerifier());

@@ -1,6 +1,6 @@
 package kd.cd.net.apachehttp;
 
-import kd.cd.net.AbstractNetTuplesFactory;
+import kd.cd.net.AbstractNetFactory;
 import lombok.SneakyThrows;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
@@ -25,20 +25,20 @@ import javax.net.ssl.SSLException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
 
-public class ApacheHttpNetTuplesFactory extends AbstractNetTuplesFactory {
-    private static volatile ApacheHttpNetTuplesFactory factory;
+public class ApacheHttpNetFactory extends AbstractNetFactory {
+    private static volatile ApacheHttpNetFactory factory;
 
-    private ApacheHttpNetTuplesFactory() {
+    private ApacheHttpNetFactory() {
         if (factory != null) {
             throw new IllegalStateException("No reflection allowed here");
         }
     }
 
-    public static ApacheHttpNetTuplesFactory getInstance() {
+    public static ApacheHttpNetFactory getInstance() {
         if (factory == null) {
-            synchronized (ApacheHttpNetTuplesFactory.class) {
+            synchronized (ApacheHttpNetFactory.class) {
                 if (factory == null) {
-                    factory = new ApacheHttpNetTuplesFactory();
+                    factory = new ApacheHttpNetFactory();
                 }
             }
         }

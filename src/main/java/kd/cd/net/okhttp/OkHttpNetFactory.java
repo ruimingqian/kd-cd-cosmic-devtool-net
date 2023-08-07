@@ -1,7 +1,7 @@
 package kd.cd.net.okhttp;
 
 import kd.bos.context.RequestContext;
-import kd.cd.net.AbstractNetTuplesFactory;
+import kd.cd.net.AbstractNetFactory;
 import kd.cd.net.log.LogParam;
 import kd.cd.net.log.OkHttpLogger;
 import lombok.Getter;
@@ -17,26 +17,20 @@ import java.net.Proxy;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @Description:
- * @Author: qrm
- * @Version: 1.0
- * @Date: 2023/8/2 18:19
- */
-public class OkHttpNetTuplesFactory extends AbstractNetTuplesFactory {
-    private static volatile OkHttpNetTuplesFactory factory;
+public class OkHttpNetFactory extends AbstractNetFactory {
+    private static volatile OkHttpNetFactory factory;
 
-    private OkHttpNetTuplesFactory() {
+    private OkHttpNetFactory() {
         if (factory != null) {
             throw new IllegalStateException("No reflection allowed here");
         }
     }
 
-    public static OkHttpNetTuplesFactory getInstance() {
+    public static OkHttpNetFactory getInstance() {
         if (factory == null) {
-            synchronized (OkHttpNetTuplesFactory.class) {
+            synchronized (OkHttpNetFactory.class) {
                 if (factory == null) {
-                    factory = new OkHttpNetTuplesFactory();
+                    factory = new OkHttpNetFactory();
                 }
             }
         }
@@ -60,7 +54,7 @@ public class OkHttpNetTuplesFactory extends AbstractNetTuplesFactory {
         @Override
         public Response intercept(@NotNull Chain chain) throws IOException {
             Request req = chain.request();
-            OkHttpNetTuplesFactory.EventTracker tracker = req.tag(OkHttpNetTuplesFactory.EventTracker.class);
+            OkHttpNetFactory.EventTracker tracker = req.tag(OkHttpNetFactory.EventTracker.class);
 
             if (tracker == null) {
                 return chain.proceed(req);

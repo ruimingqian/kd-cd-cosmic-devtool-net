@@ -12,7 +12,7 @@ import java.security.cert.X509Certificate;
  * @author qrm
  * @version 1.0
  */
-public abstract class AbstractNetTuplesFactory {
+public abstract class AbstractNetFactory {
 
     @SneakyThrows
     public SSLContext newSSLContext() {

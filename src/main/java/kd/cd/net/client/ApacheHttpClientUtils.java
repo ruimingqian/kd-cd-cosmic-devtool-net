@@ -1,6 +1,6 @@
 package kd.cd.net.client;
 
-import kd.cd.net.apachehttp.ApacheHttpNetTuplesFactory;
+import kd.cd.net.apachehttp.ApacheHttpNetFactory;
 import kd.cd.net.utils.SystemPropertyUtils;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
@@ -30,7 +30,7 @@ public class ApacheHttpClientUtils {
                 .build();
         builder.setDefaultRequestConfig(requestConfig);
 
-        ApacheHttpNetTuplesFactory af = ApacheHttpNetTuplesFactory.getInstance();
+        ApacheHttpNetFactory af = ApacheHttpNetFactory.getInstance();
         if (ignoreSSL) {
             builder.setSSLSocketFactory(af.getSSLConnectionSocketFactory());
             builder.setSSLHostnameVerifier(af.newTrustAllHostnameVerifier());
