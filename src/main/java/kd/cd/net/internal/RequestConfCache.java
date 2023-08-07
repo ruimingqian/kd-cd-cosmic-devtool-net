@@ -131,8 +131,8 @@ public class RequestConfCache {
         });
     }
 
-    public void clearCache() {
+    public static void clearCache() {
         cache.cleanUp();
-        reqConfCachePool.remove(configNum);
+        reqConfCachePool.clear();
     }
 }
