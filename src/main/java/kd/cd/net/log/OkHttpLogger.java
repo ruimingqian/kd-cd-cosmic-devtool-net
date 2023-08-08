@@ -14,12 +14,29 @@ public class OkHttpLogger extends AbstractNetLogger {
         ObjectNode reqNode = logParam.getReqInfo();
         ObjectNode respNode = logParam.getRespInfo();
 
-        logDto.setUrl(Optional.ofNullable(reqNode).map(o -> o.get("url").asText()).orElse(""));
-        logDto.setMethod(Optional.ofNullable(reqNode).map(r -> r.get("method").asText()).orElse(""));
-        logDto.setHeader(Optional.ofNullable(reqNode).map(r -> StringUtils.chomp(r.get("headers").asText())).orElse(""));
+        logDto.setUrl(Optional.ofNullable(reqNode)
+                .map(o -> o.get("url").asText())
+                .orElse(""));
+        logDto.setMethod(Optional.ofNullable(reqNode)
+                .map(r -> r.get("method").asText())
+                .orElse(""));
+        logDto.setHeader(Optional.ofNullable(reqNode)
+                .map(r -> StringUtils.chomp(r.get("headers").asText()))
+                .orElse(""));
+
         boolean format = logParam.isEnableFormat();
-        logDto.setRequest(Optional.ofNullable(reqNode).map(r -> format ? JsonUtils.fuzzyFormat(r.get("body").asText()) : r.get("body").asText()).orElse(""));
-        logDto.setResponse(Optional.ofNullable(respNode).map(r -> format ? JsonUtils.fuzzyFormat(r.get("body").asText()) : r.get("body").asText()).orElse(""));
+        logDto.setRequest(Optional.ofNullable(reqNode)
+                .map(r -> format ? JsonUtils.fuzzyFormat(r.get("body").asText()) : r.get("body").asText())
+                .orElse(""));
+
+        String respString = Optional.ofNullable(respNode)
+                .map(r -> format ? JsonUtils.fuzzyFormat(r.get("body").asText()) : r.get("body").asText())
+                .orElse("");
+        Integer limitSize = logParam.getRespLimitSize();
+        if (limitSize != null && limitSize > 0 && limitSize < respString.length()) {
+            respString = respString.substring(0, limitSize);
+        }
+        logDto.setResponse(respString);
 
         if (respNode == null) {
             logDto.setStatus(String.valueOf(false));

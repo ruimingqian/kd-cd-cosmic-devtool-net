@@ -71,16 +71,43 @@ public class RequestConfCache {
         if (!isEnableLogging()) {
             return null;
         }
-        Object logParam = cache.get(bizForm + "_" + configNum + "_logparam", k -> {
+        LogParam logParam = (LogParam) cache.get(bizForm + "_" + configNum + "_logparam", k -> {
             DynamicObject obj = loadOrQuery();
             return new LogParam(bizForm, obj.getString("number"), obj.getString("name"));
         });
         assert logParam != null;
-        return ((LogParam) logParam).clone();
+        if (isFormatLog()) {
+            logParam.setEnableFormat(true);
+        }
+        Integer respLimit = getRespLimit();
+        if (respLimit != null && respLimit > 0) {
+            logParam.setRespLimitSize(respLimit);
+        }
+        return logParam.clone();
+    }
+
+    public Integer getRespLimit() {
+        try {
+            return (Integer) getProperty("resplimit");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public boolean isFormatLog() {
+        try {
+            return (boolean) getProperty("formatlog");
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public boolean isEnableLogging() {
-        return (boolean) getProperty("enablelog");
+        try {
+            return (boolean) getProperty("enablelog");
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     public String getUrl() {
@@ -132,7 +159,7 @@ public class RequestConfCache {
     }
 
     public static void clearCache() {
-        cache.cleanUp();
+        cache.invalidateAll();
         reqConfCachePool.clear();
     }
 }

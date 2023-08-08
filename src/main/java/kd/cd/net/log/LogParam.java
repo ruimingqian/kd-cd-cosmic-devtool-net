@@ -39,7 +39,12 @@ public class LogParam implements Cloneable {
     /**
      * 是否格式化请求响应信息
      */
-    private boolean enableFormat = true;
+    private boolean enableFormat;
+
+    /**
+     * 响应截取长度
+     */
+    private Integer respLimitSize;
 
     /**
      * 表单标识
