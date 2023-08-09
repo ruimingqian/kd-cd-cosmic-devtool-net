@@ -44,6 +44,11 @@ public class MappingBuilder<V> implements Mapper<V> {
     }
 
     @Override
+    public String toString() {
+        return toJsonString();
+    }
+
+    @Override
     public String toJsonString() {
         return delegate.toJsonString();
     }

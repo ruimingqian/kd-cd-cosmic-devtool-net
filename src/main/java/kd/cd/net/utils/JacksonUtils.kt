@@ -53,15 +53,5 @@ class JacksonUtils private constructor() {
         fun readObjectNode(jsonStr: String): ObjectNode {
             return readJsonNode(jsonStr) as ObjectNode
         }
-
-        @JvmStatic
-        fun getKeySet(node: JsonNode): Set<String> {
-            val result = HashSet<String>()
-            while (node.fields().hasNext()) {
-                val key = node.fields().next().key
-                result.add(key)
-            }
-            return result
-        }
     }
 }
