@@ -13,16 +13,20 @@ import java.util.Set;
 public class MappingBuilder<V> implements Mapper<V> {
     private final Mapper<V> delegate;
 
-    public MappingBuilder() {
-        this.delegate = new JsonMapper<>(null);
-    }
-
-    public MappingBuilder(String jsonString) {
+    private MappingBuilder(String jsonString) {
         this.delegate = new JsonMapper<>(jsonString);
     }
 
-    public MappingBuilder(Map<String, V> map) {
+    private MappingBuilder(Map<String, V> map) {
         this.delegate = new MapMapper<>(map);
+    }
+
+    public static <V> MappingBuilder<V> fromJson(String jsonString) {
+        return new MappingBuilder<>(jsonString);
+    }
+
+    public static <V> MappingBuilder<V> fromMap(Map<String, V> map) {
+        return new MappingBuilder<>(map);
     }
 
     @Override
