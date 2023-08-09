@@ -10,23 +10,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class MappingBuilder<V> implements Mapper<V> {
+public class MappingParser<V> implements Mapper<V> {
     private final Mapper<V> delegate;
 
-    private MappingBuilder(String jsonString) {
+    private MappingParser(String jsonString) {
         this.delegate = new JsonMapper<>(jsonString);
     }
 
-    private MappingBuilder(Map<String, V> map) {
+    private MappingParser(Map<String, V> map) {
         this.delegate = new MapMapper<>(map);
     }
 
-    public static <V> MappingBuilder<V> fromJsonString(String jsonString) {
-        return new MappingBuilder<>(jsonString);
+    public static <V> MappingParser<V> fromJsonString(String jsonString) {
+        return new MappingParser<>(jsonString);
     }
 
-    public static <V> MappingBuilder<V> fromMap(Map<String, V> map) {
-        return new MappingBuilder<>(map);
+    public static <V> MappingParser<V> fromMap(Map<String, V> map) {
+        return new MappingParser<>(map);
     }
 
     @Override
