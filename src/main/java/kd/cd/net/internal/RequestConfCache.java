@@ -56,7 +56,7 @@ public class RequestConfCache {
         return reqConfCachePool.computeIfAbsent(configNum, k -> new RequestConfCache(configNum));
     }
 
-    public final boolean isNotConfigured() {
+    private final boolean isNotConfigured() {
         return loadOrQuery() == null;
     }
 
@@ -73,7 +73,7 @@ public class RequestConfCache {
             return new LogParam(bizFormId, obj.getString("number"), obj.getString("name"));
         });
         assert logParam != null;
-        if (isFormatLog()) {
+        if (isEnableFormat()) {
             logParam.setEnableFormat(true);
         }
         Integer respLimit = getChompSize();
@@ -83,7 +83,7 @@ public class RequestConfCache {
         return logParam.clone();
     }
 
-    public Integer getChompSize() {
+    private Integer getChompSize() {
         try {
             return (Integer) getProperty("resplimit");
         } catch (Exception e) {
@@ -91,7 +91,7 @@ public class RequestConfCache {
         }
     }
 
-    public boolean isFormatLog() {
+    private boolean isEnableFormat() {
         try {
             return (boolean) getProperty("formatlog");
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class RequestConfCache {
         }
     }
 
-    public boolean isEnableLogging() {
+    private boolean isEnableLogging() {
         try {
             return (boolean) getProperty("enablelog");
         } catch (Exception e) {
