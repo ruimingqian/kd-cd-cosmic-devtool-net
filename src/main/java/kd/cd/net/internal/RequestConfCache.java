@@ -1,6 +1,5 @@
 package kd.cd.net.internal;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import kd.bos.dataentity.entity.DynamicObject;
@@ -9,9 +8,7 @@ import kd.bos.orm.query.QCP;
 import kd.bos.orm.query.QFilter;
 import kd.bos.servicehelper.BusinessDataServiceHelper;
 import kd.cd.net.log.LogParam;
-import kd.cd.net.utils.JacksonUtils;
 import kd.cd.net.utils.SystemPropertyUtils;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -67,26 +64,26 @@ public class RequestConfCache {
         return getLogParam("");
     }
 
-    public LogParam getLogParam(String bizForm) {
+    public LogParam getLogParam(String bizFormId) {
         if (!isEnableLogging()) {
             return null;
         }
-        LogParam logParam = (LogParam) cache.get(bizForm + "_" + configNum + "_logparam", k -> {
+        LogParam logParam = (LogParam) cache.get(bizFormId + "_" + configNum + "_logparam", k -> {
             DynamicObject obj = loadOrQuery();
-            return new LogParam(bizForm, obj.getString("number"), obj.getString("name"));
+            return new LogParam(bizFormId, obj.getString("number"), obj.getString("name"));
         });
         assert logParam != null;
         if (isFormatLog()) {
             logParam.setEnableFormat(true);
         }
-        Integer respLimit = getRespLimit();
+        Integer respLimit = getChompSize();
         if (respLimit != null && respLimit > 0) {
             logParam.setRespLimitSize(respLimit);
         }
         return logParam.clone();
     }
 
-    public Integer getRespLimit() {
+    public Integer getChompSize() {
         try {
             return (Integer) getProperty("resplimit");
         } catch (Exception e) {
@@ -129,17 +126,12 @@ public class RequestConfCache {
                 .orElse("");
     }
 
-    public Map<String, Object> getCustomParamMap() {
+    public Map<String, Object> getAllCustomParamAsMap() {
         return loadOrQuery().getDynamicObjectCollection("entry").stream()
                 .collect(Collectors.toMap(k -> k.getString("key"), v -> v.get("value")));
     }
 
-    @SneakyThrows
-    public ObjectNode getBodyStructureJson() {
-        return (ObjectNode) JacksonUtils.getObjectMapper().readTree(getBodyStructure());
-    }
-
-    public String getBodyStructure() {
+    public String getReqTemplateAsText() {
         return (String) getProperty("body_tag");
     }
 

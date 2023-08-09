@@ -11,22 +11,24 @@ import java.util.Map;
 import java.util.Set;
 
 public class MappingParser<V> implements Mapper<V> {
-    private final Mapper<V> delegate;
+    private Mapper<V> delegate;
 
-    private MappingParser(String jsonString) {
-        this.delegate = new JsonMapper<>(jsonString);
-    }
-
-    private MappingParser(Map<String, V> map) {
-        this.delegate = new MapMapper<>(map);
+    public static <V> MappingParser<V> fromJson(JSONObject jsonObject) {
+        MappingParser<V> parser = new MappingParser<>();
+        parser.delegate = new JsonMapper<>(jsonObject);
+        return parser;
     }
 
     public static <V> MappingParser<V> fromJsonString(String jsonString) {
-        return new MappingParser<>(jsonString);
+        MappingParser<V> parser = new MappingParser<>();
+        parser.delegate = new JsonMapper<>(jsonString);
+        return parser;
     }
 
     public static <V> MappingParser<V> fromMap(Map<String, V> map) {
-        return new MappingParser<>(map);
+        MappingParser<V> parser = new MappingParser<>();
+        parser.delegate = new MapMapper<>(map);
+        return parser;
     }
 
     @Override
@@ -64,6 +66,10 @@ public class MappingParser<V> implements Mapper<V> {
 
     static class JsonMapper<V> implements Mapper<V> {
         private final JSONObject jsonObject;
+
+        public JsonMapper(JSONObject jsonObject) {
+            this.jsonObject = jsonObject;
+        }
 
         public JsonMapper(String jsonString) {
             if (StringUtils.isEmpty(jsonString)) {
