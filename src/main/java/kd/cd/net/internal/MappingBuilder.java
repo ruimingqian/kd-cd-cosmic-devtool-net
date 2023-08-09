@@ -21,7 +21,7 @@ public class MappingBuilder<V> implements Mapper<V> {
         this.delegate = new MapMapper<>(map);
     }
 
-    public static <V> MappingBuilder<V> fromJson(String jsonString) {
+    public static <V> MappingBuilder<V> fromJsonString(String jsonString) {
         return new MappingBuilder<>(jsonString);
     }
 
