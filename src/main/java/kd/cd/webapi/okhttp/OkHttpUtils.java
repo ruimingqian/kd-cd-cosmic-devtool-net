@@ -65,7 +65,9 @@ public final class OkHttpUtils {
 
     public static ObjectNode respBodyToJson(Response resp) throws IOException {
         String bodyString = respBodyToString(resp);
-        return StringUtils.isEmpty(bodyString) ? null : (ObjectNode) JacksonUtils.getObjectMapper().readTree(bodyString);
+        return StringUtils.isEmpty(bodyString) ?
+                null :
+                (ObjectNode) JacksonUtils.getObjectMapper().readTree(bodyString);
     }
 
     public static String respBodyToString(Response resp) throws IOException {
