@@ -63,24 +63,24 @@ public final class OkHttpUtils {
         return builder;
     }
 
-    public static ObjectNode bodyToJson(Response resp) throws IOException {
-        String bodyString = bodyToString(resp);
+    public static ObjectNode respBodyToJson(Response resp) throws IOException {
+        String bodyString = respBodyToString(resp);
         return StringUtils.isEmpty(bodyString) ? null : (ObjectNode) JacksonUtils.getObjectMapper().readTree(bodyString);
     }
 
-    public static String bodyToString(Response resp) throws IOException {
+    public static String respBodyToString(Response resp) throws IOException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.string();
     }
 
-    public static byte[] bodyToBytes(Response resp) throws IOException {
+    public static byte[] respBodyToBytes(Response resp) throws IOException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.bytes();
     }
 
-    public static InputStream bodyToInputStream(Response resp) {
+    public static InputStream respBodyToInputStream(Response resp) {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.byteStream();
@@ -95,31 +95,31 @@ public final class OkHttpUtils {
         }
     }
 
-    public static ObjectNode requestToJson(Request req, boolean includeBody) {
+    public static ObjectNode fullReqToJson(Request req, boolean includeBody) {
         return Optional.ofNullable(req).map(r -> {
                     ObjectNode json = JacksonUtils.getObjectMapper().createObjectNode();
                     json.put("url", r.url().toString());
                     json.put("method", r.method());
                     json.put("headers", r.headers().toString());
-                    json.put("body", includeBody ? getReqBodyString(req) : null);
+                    json.put("body", includeBody ? getBufferedReqBodyString(req) : null);
                     return json;
                 }
         ).orElse(null);
     }
 
-    public static ObjectNode responseToJson(Response resp, boolean includeBody) {
+    public static ObjectNode fullRespToJson(Response resp, boolean includeBody) {
         return Optional.ofNullable(resp).map(r -> {
                     ObjectNode json = JacksonUtils.getObjectMapper().createObjectNode();
                     json.put("success", resp.isSuccessful());
                     json.put("headers", resp.headers().toString());
                     json.put("message", resp.message());
-                    json.put("body", includeBody ? cloneRespBodyString(resp) : null);
+                    json.put("body", includeBody ? getBufferedRespBodyString(resp) : null);
                     return json;
                 }
         ).orElse(null);
     }
 
-    private static String getReqBodyString(Request req) {
+    private static String getBufferedReqBodyString(Request req) {
         try (Buffer buffer = new Buffer()) {
             RequestBody body = req.body();
             if (body != null) {
@@ -135,7 +135,7 @@ public final class OkHttpUtils {
         return null;
     }
 
-    private static String cloneRespBodyString(Response resp) {
+    private static String getBufferedRespBodyString(Response resp) {
         try (Buffer buffer = getRespBuffer(resp)) {
             return buffer.clone().readUtf8();
 

@@ -28,13 +28,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public final class ApacheHttpUtils {
+public final class HttpUtils {
     private static final int CONNECT_TIMEOUT_SECONDS = SystemPropertyUtils.getInt("apachehttpclient.default.connecttimeoutseconds", 10);
     private static final int SOCKET_TIMEOUT_SECONDS = SystemPropertyUtils.getInt("apachehttpclient.default.sockettimeoutseconds", 60);
     private static final boolean IGNORE_SSL_CHECK = SystemPropertyUtils.getBoolean("apachehttpclient.default.ignoressl", true);
     private static final boolean ENABLE_RETRY = SystemPropertyUtils.getBoolean("apachehttpclient.default.retry", true);
 
-    private ApacheHttpUtils() {
+    private HttpUtils() {
     }
 
     public static HttpClientBuilder newDefaultBulider() {
@@ -52,7 +52,7 @@ public final class ApacheHttpUtils {
         builder.setDefaultRequestConfig(requestConfig);
 
         if (ignoreSSL) {
-            builder.setSSLSocketFactory(SSLUtils.getSSLConnectionSocketFactory());
+            builder.setSSLSocketFactory(SSLUtils.newSSLConnectionSocketFactory());
             builder.setSSLHostnameVerifier(new TrustAllHostnameVerifier());
         }
         if (enableRetry) {
@@ -68,7 +68,7 @@ public final class ApacheHttpUtils {
     public static HttpClientConnectionManager newClientConnectionManager(int maxConnection, int defMaxPerRoute) {
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
-                .register("https", SSLUtils.getSSLConnectionSocketFactory()).build();
+                .register("https", SSLUtils.newSSLConnectionSocketFactory()).build();
 
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         // 设置整个连接池最大连接数
@@ -78,22 +78,22 @@ public final class ApacheHttpUtils {
         return connectionManager;
     }
 
-    public static ObjectNode bodyToJson(CloseableHttpResponse resp) throws IOException {
-        String bodyString = bodyToString(resp);
+    public static ObjectNode respToJson(CloseableHttpResponse resp) throws IOException {
+        String bodyString = respToString(resp);
         return StringUtils.isEmpty(bodyString) ? null : (ObjectNode) JacksonUtils.getObjectMapper().readTree(bodyString);
     }
 
-    public static String bodyToString(CloseableHttpResponse resp) throws IOException {
+    public static String respToString(CloseableHttpResponse resp) throws IOException {
         checkResp(resp);
         return EntityUtils.toString(resp.getEntity(), StandardCharsets.UTF_8);
     }
 
-    public static byte[] bodyToBytes(CloseableHttpResponse resp) throws IOException {
+    public static byte[] respToBytes(CloseableHttpResponse resp) throws IOException {
         checkResp(resp);
         return EntityUtils.toByteArray(resp.getEntity());
     }
 
-    public static InputStream bodyToStream(CloseableHttpResponse resp) throws IOException {
+    public static InputStream respToInputStream(CloseableHttpResponse resp) throws IOException {
         try {
             checkResp(resp);
             return resp.getEntity().getContent();

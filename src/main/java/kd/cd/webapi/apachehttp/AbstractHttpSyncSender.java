@@ -12,18 +12,18 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AbstractApacheHttpSyncSender<T> implements AppacheHttpSyncSend<T> {
+public abstract class AbstractHttpSyncSender<T> implements HttpSyncSend<T> {
     protected CloseableHttpClient client;
 
     @Override
     public T sendRaw(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogParam logParam) throws IOException {
-        HttpRequestBase request = ApacheHttpRequestFactory.newRawRequest(method, contentType, url, reqString, headerMap);
+        HttpRequestBase request = HttpRequestFactory.newRawRequest(method, contentType, url, reqString, headerMap);
         return execSync(request, respHandelFunction());
     }
 
     @Override
     public T sendUrlencoded(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogParam logParam) throws IOException {
-        HttpRequestBase request = ApacheHttpRequestFactory.newUrlencodedRequest(method, url, reqMap, headerMap);
+        HttpRequestBase request = HttpRequestFactory.newUrlencodedRequest(method, url, reqMap, headerMap);
         return execSync(request, respHandelFunction());
     }
 

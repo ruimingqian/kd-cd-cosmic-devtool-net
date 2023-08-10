@@ -33,8 +33,8 @@ public class RespInterceptor implements Interceptor {
             throw e;
 
         } finally {
-            logParam.setReqInfo(OkHttpUtils.requestToJson(req, logParam.isRecordFullRequest()));
-            logParam.setRespInfo(OkHttpUtils.responseToJson(resp, logParam.isRecordFullResponse()));
+            logParam.setReqInfo(OkHttpUtils.fullReqToJson(req, logParam.isRecordFullRequest()));
+            logParam.setRespInfo(OkHttpUtils.fullRespToJson(resp, logParam.isRecordFullResponse()));
         }
 
         return resp;

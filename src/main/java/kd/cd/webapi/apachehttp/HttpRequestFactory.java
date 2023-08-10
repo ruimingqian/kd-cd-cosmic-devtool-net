@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ApacheHttpRequestFactory {
-    private ApacheHttpRequestFactory() {
+public class HttpRequestFactory {
+    private HttpRequestFactory() {
     }
 
     public static HttpRequestBase newRawRequest(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap) {

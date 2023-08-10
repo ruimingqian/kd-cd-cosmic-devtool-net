@@ -13,7 +13,7 @@ public class SSLUtils {
     private SSLUtils() {
     }
 
-    public static SSLConnectionSocketFactory getSSLConnectionSocketFactory() {
+    public static SSLConnectionSocketFactory newSSLConnectionSocketFactory() {
         return new SSLConnectionSocketFactory(newSSLContext(), new String[]{"SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"}, null, NoopHostnameVerifier.INSTANCE);
     }
 

@@ -1,17 +1,13 @@
 package kd.cd.webapi.okhttp;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.cd.webapi.ContentType;
 import kd.cd.webapi.Method;
 import kd.cd.webapi.RespHandle;
 import kd.cd.webapi.log.LogParam;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -47,42 +43,5 @@ public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Respon
     @Override
     OkHttpClient.Builder defaultBuilder() {
         return OkHttpUtils.newDefaultBulider();
-    }
-
-    static class RespHandler implements RespHandle<Response> {
-        private final Response resp;
-
-        public RespHandler(Response response) {
-            this.resp = response;
-        }
-
-        public Response response() {
-            return resp;
-        }
-
-        public ObjectNode bodyToJson() throws IOException {
-            return OkHttpUtils.bodyToJson(resp);
-        }
-
-        public byte[] bodyToBytes() throws IOException {
-            return OkHttpUtils.bodyToBytes(resp);
-        }
-
-        public void writeTo(OutputStream outputStream) throws IOException {
-            InputStream inputStream = bodyToInputStream();
-            IOUtils.copy(inputStream, outputStream);
-        }
-
-        public InputStream bodyToInputStream() {
-            return OkHttpUtils.bodyToInputStream(resp);
-        }
-
-        public String bodyToString() throws IOException {
-            return OkHttpUtils.bodyToString(resp);
-        }
-
-        public boolean isSuccessful() {
-            return resp.isSuccessful();
-        }
     }
 }
