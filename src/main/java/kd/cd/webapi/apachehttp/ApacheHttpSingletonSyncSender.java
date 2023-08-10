@@ -36,9 +36,9 @@ public class ApacheHttpSingletonSyncSender extends ApacheHttpSyncSender {
     @Override
     HttpClientBuilder defaultBuilder() {
         HttpClientBuilder builder = super.defaultBuilder();
-        ApacheHttpNetFactory af = ApacheHttpNetFactory.getInstance();
+        ApacheHttpServiceFactory sf = ApacheHttpServiceFactory.getInstance();
         //create a larger connection pool for sigleton instance
-        HttpClientConnectionManager poolingManager = af.newPoolingManager(SINGLETON_MAX_CONNECTION, SINGLETON_MAX_PER_ROUTE);
+        HttpClientConnectionManager poolingManager = sf.newPoolingManager(SINGLETON_MAX_CONNECTION, SINGLETON_MAX_PER_ROUTE);
         builder.setConnectionManager(poolingManager);
         return builder;
     }

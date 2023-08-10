@@ -1,7 +1,7 @@
 package kd.cd.webapi.okhttp;
 
 import kd.bos.context.RequestContext;
-import kd.cd.webapi.AbstractNetFactory;
+import kd.cd.webapi.AbstractServiceFactory;
 import kd.cd.webapi.log.LogParam;
 import kd.cd.webapi.log.OkHttpLogger;
 import lombok.Getter;
@@ -17,20 +17,20 @@ import java.net.Proxy;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class OkHttpNetFactory extends AbstractNetFactory {
-    private static volatile OkHttpNetFactory factory;
+public class OkHttpServiceFactory extends AbstractServiceFactory {
+    private static volatile OkHttpServiceFactory factory;
 
-    private OkHttpNetFactory() {
+    private OkHttpServiceFactory() {
         if (factory != null) {
             throw new IllegalStateException("No reflection allowed here");
         }
     }
 
-    public static OkHttpNetFactory getInstance() {
+    public static OkHttpServiceFactory getInstance() {
         if (factory == null) {
-            synchronized (OkHttpNetFactory.class) {
+            synchronized (OkHttpServiceFactory.class) {
                 if (factory == null) {
-                    factory = new OkHttpNetFactory();
+                    factory = new OkHttpServiceFactory();
                 }
             }
         }
@@ -54,7 +54,7 @@ public class OkHttpNetFactory extends AbstractNetFactory {
         @Override
         public Response intercept(@NotNull Chain chain) throws IOException {
             Request req = chain.request();
-            OkHttpNetFactory.EventTracker tracker = req.tag(OkHttpNetFactory.EventTracker.class);
+            OkHttpServiceFactory.EventTracker tracker = req.tag(OkHttpServiceFactory.EventTracker.class);
 
             if (tracker == null) {
                 return chain.proceed(req);

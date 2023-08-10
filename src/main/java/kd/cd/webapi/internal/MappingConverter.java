@@ -10,41 +10,41 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class MappingParser<V> implements Mapper<V> {
-    private Mapper<V> delegate;
+public class MappingConverter<V> implements MappingConvert<V> {
+    private MappingConvert<V> delegate;
 
-    public static <V> MappingParser<V> fromJson(JSONObject jsonObject) {
-        MappingParser<V> parser = new MappingParser<>();
-        parser.delegate = new JsonMapper<>(jsonObject);
-        return parser;
+    public static <V> MappingConverter<V> fromJson(JSONObject jsonObject) {
+        MappingConverter<V> converter = new MappingConverter<>();
+        converter.delegate = new JsonConverter<>(jsonObject);
+        return converter;
     }
 
-    public static <V> MappingParser<V> fromJsonString(String jsonString) {
-        MappingParser<V> parser = new MappingParser<>();
-        parser.delegate = new JsonMapper<>(jsonString);
-        return parser;
+    public static <V> MappingConverter<V> fromJsonString(String jsonString) {
+        MappingConverter<V> converter = new MappingConverter<>();
+        converter.delegate = new JsonConverter<>(jsonString);
+        return converter;
     }
 
-    public static <V> MappingParser<V> fromMap(Map<String, V> map) {
-        MappingParser<V> parser = new MappingParser<>();
-        parser.delegate = new MapMapper<>(map);
-        return parser;
+    public static <V> MappingConverter<V> fromMap(Map<String, V> map) {
+        MappingConverter<V> converter = new MappingConverter<>();
+        converter.delegate = new MapConverter<>(map);
+        return converter;
     }
 
     @Override
-    public Mapper<V> put(String key, V value) {
+    public MappingConvert<V> put(String key, V value) {
         delegate.put(key, value);
         return this;
     }
 
     @Override
-    public Mapper<V> replace(String key, V value) {
+    public MappingConvert<V> replace(String key, V value) {
         delegate.replace(key, value);
         return this;
     }
 
     @Override
-    public Mapper<V> remove(String... keys) {
+    public MappingConvert<V> remove(String... keys) {
         delegate.remove(keys);
         return this;
     }
@@ -64,14 +64,14 @@ public class MappingParser<V> implements Mapper<V> {
         return delegate.toMap();
     }
 
-    static class JsonMapper<V> implements Mapper<V> {
+    static class JsonConverter<V> implements MappingConvert<V> {
         private final JSONObject jsonObject;
 
-        public JsonMapper(JSONObject jsonObject) {
+        public JsonConverter(JSONObject jsonObject) {
             this.jsonObject = jsonObject;
         }
 
-        public JsonMapper(String jsonString) {
+        public JsonConverter(String jsonString) {
             if (StringUtils.isEmpty(jsonString)) {
                 this.jsonObject = new JSONObject();
             } else {
@@ -92,19 +92,19 @@ public class MappingParser<V> implements Mapper<V> {
         }
 
         @Override
-        public Mapper<V> put(String key, V value) {
+        public MappingConvert<V> put(String key, V value) {
             jsonObject.put(key, value);
             return this;
         }
 
         @Override
-        public Mapper<V> replace(String key, V value) {
+        public MappingConvert<V> replace(String key, V value) {
             jsonObject.replace(key, value);
             return this;
         }
 
         @Override
-        public Mapper<V> remove(String... keys) {
+        public MappingConvert<V> remove(String... keys) {
             for (String key : keys) {
                 jsonObject.remove(key);
             }
@@ -112,10 +112,10 @@ public class MappingParser<V> implements Mapper<V> {
         }
     }
 
-    static class MapMapper<V> implements Mapper<V> {
+    static class MapConverter<V> implements MappingConvert<V> {
         private final Map<String, V> map;
 
-        public MapMapper(Map<String, V> map) {
+        public MapConverter(Map<String, V> map) {
             if (map == null) {
                 this.map = new HashMap<>();
             } else {
@@ -127,17 +127,17 @@ public class MappingParser<V> implements Mapper<V> {
             return this.map;
         }
 
-        public Mapper<V> put(String key, V value) {
+        public MappingConvert<V> put(String key, V value) {
             this.map.put(key, value);
             return this;
         }
 
-        public Mapper<V> replace(String key, V value) {
+        public MappingConvert<V> replace(String key, V value) {
             this.map.replace(key, value);
             return this;
         }
 
-        public Mapper<V> remove(String... keys) {
+        public MappingConvert<V> remove(String... keys) {
             Set<String> keySet = this.map.keySet();
             Arrays.asList(keys).forEach(keySet::remove);
             return this;

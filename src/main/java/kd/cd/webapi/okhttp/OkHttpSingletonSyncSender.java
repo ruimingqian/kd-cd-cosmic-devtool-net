@@ -58,8 +58,8 @@ public class OkHttpSingletonSyncSender extends OkHttpSyncSender {
     OkHttpClient.Builder defaultBuilder() {
         OkHttpClient.Builder builder = super.defaultBuilder();
         //create a larger connection pool for sigleton instance
-        OkHttpNetFactory cf = OkHttpNetFactory.getInstance();
-        ConnectionPool pool = cf.newConnectionPool(SINGLETON_CONNECTPOOL_SIZE, SINGLETON_KEEPALIVE_MINUTES);
+        OkHttpServiceFactory sf = OkHttpServiceFactory.getInstance();
+        ConnectionPool pool = sf.newConnectionPool(SINGLETON_CONNECTPOOL_SIZE, SINGLETON_KEEPALIVE_MINUTES);
         builder.connectionPool(pool);
         return builder;
     }

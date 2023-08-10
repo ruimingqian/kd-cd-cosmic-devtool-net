@@ -1,6 +1,6 @@
 package kd.cd.webapi.client;
 
-import kd.cd.webapi.apachehttp.ApacheHttpNetFactory;
+import kd.cd.webapi.apachehttp.ApacheHttpServiceFactory;
 import kd.cd.webapi.utils.SystemPropertyUtils;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
@@ -30,7 +30,7 @@ public class ApacheHttpClientUtils {
                 .build();
         builder.setDefaultRequestConfig(requestConfig);
 
-        ApacheHttpNetFactory af = ApacheHttpNetFactory.getInstance();
+        ApacheHttpServiceFactory af = ApacheHttpServiceFactory.getInstance();
         if (ignoreSSL) {
             builder.setSSLSocketFactory(af.getSSLConnectionSocketFactory());
             builder.setSSLHostnameVerifier(af.newTrustAllHostnameVerifier());

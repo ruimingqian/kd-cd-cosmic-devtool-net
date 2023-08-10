@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AbstractOkHttpSyncSender<T> implements RawSender<T>, UrlencodedSender<T>, FormDataSender<T> {
+public abstract class AbstractOkHttpSyncSender<T> implements RawSend<T>, UrlencodedSend<T>, FormDataSend<T> {
     protected OkHttpClient client;
 
     @Override

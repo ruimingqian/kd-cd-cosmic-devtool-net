@@ -84,9 +84,9 @@ public final class OkHttpRequestFactory {
                 .method(method.getName(), reqBody);
 
         if (logParam != null) {
-            OkHttpNetFactory.EventTracker tracker = new OkHttpNetFactory.EventTracker();
+            OkHttpServiceFactory.EventTracker tracker = new OkHttpServiceFactory.EventTracker();
             tracker.setLogParam(logParam);
-            reqBuilder.tag(OkHttpNetFactory.EventTracker.class, tracker);
+            reqBuilder.tag(OkHttpServiceFactory.EventTracker.class, tracker);
         }
         if (contentType != null) {
             reqBuilder.addHeader("Content-Type", contentType.getName());

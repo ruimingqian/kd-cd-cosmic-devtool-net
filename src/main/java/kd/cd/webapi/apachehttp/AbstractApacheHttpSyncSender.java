@@ -2,8 +2,8 @@ package kd.cd.webapi.apachehttp;
 
 import kd.cd.webapi.ContentType;
 import kd.cd.webapi.Method;
-import kd.cd.webapi.RawSender;
-import kd.cd.webapi.UrlencodedSender;
+import kd.cd.webapi.RawSend;
+import kd.cd.webapi.UrlencodedSend;
 import kd.cd.webapi.log.LogParam;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AbstractApacheHttpSyncSender<T> implements RawSender<T>, UrlencodedSender<T> {
+public abstract class AbstractApacheHttpSyncSender<T> implements RawSend<T>, UrlencodedSend<T> {
     protected CloseableHttpClient client;
 
     @Override

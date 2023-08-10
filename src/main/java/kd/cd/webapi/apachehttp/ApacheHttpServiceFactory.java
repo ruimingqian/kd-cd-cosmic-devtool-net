@@ -1,6 +1,6 @@
 package kd.cd.webapi.apachehttp;
 
-import kd.cd.webapi.AbstractNetFactory;
+import kd.cd.webapi.AbstractServiceFactory;
 import lombok.SneakyThrows;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
@@ -25,20 +25,20 @@ import javax.net.ssl.SSLException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
 
-public class ApacheHttpNetFactory extends AbstractNetFactory {
-    private static volatile ApacheHttpNetFactory factory;
+public class ApacheHttpServiceFactory extends AbstractServiceFactory {
+    private static volatile ApacheHttpServiceFactory factory;
 
-    private ApacheHttpNetFactory() {
+    private ApacheHttpServiceFactory() {
         if (factory != null) {
             throw new IllegalStateException("No reflection allowed here");
         }
     }
 
-    public static ApacheHttpNetFactory getInstance() {
+    public static ApacheHttpServiceFactory getInstance() {
         if (factory == null) {
-            synchronized (ApacheHttpNetFactory.class) {
+            synchronized (ApacheHttpServiceFactory.class) {
                 if (factory == null) {
-                    factory = new ApacheHttpNetFactory();
+                    factory = new ApacheHttpServiceFactory();
                 }
             }
         }

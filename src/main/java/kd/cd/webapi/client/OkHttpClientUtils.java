@@ -1,6 +1,6 @@
 package kd.cd.webapi.client;
 
-import kd.cd.webapi.okhttp.OkHttpNetFactory;
+import kd.cd.webapi.okhttp.OkHttpServiceFactory;
 import kd.cd.webapi.utils.SystemPropertyUtils;
 import okhttp3.OkHttpClient;
 
@@ -27,7 +27,7 @@ public class OkHttpClientUtils {
         builder.readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         builder.writeTimeout(WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
-        OkHttpNetFactory cf = OkHttpNetFactory.getInstance();
+        OkHttpServiceFactory cf = OkHttpServiceFactory.getInstance();
         if (ignoreSSL) {
             builder.sslSocketFactory(cf.newSSLSocketFactory(), cf.newX509TrustManager());
             builder.hostnameVerifier(cf.newTrustAllHostnameVerifier());
