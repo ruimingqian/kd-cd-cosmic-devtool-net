@@ -1,5 +1,5 @@
 package kd.cd.webapi.log;
 
-public interface NetLog<T> {
+public interface WebLog<T> {
     void log(T t);
 }

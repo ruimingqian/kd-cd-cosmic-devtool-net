@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.cd.webapi.ContentType;
 import kd.cd.webapi.Method;
 import kd.cd.webapi.RespHandle;
-import kd.cd.webapi.client.ApacheHttpClientUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -46,7 +45,7 @@ public class ApacheHttpSyncSender extends AbstractApacheHttpSyncSender<RespHandl
 
     @Override
     HttpClientBuilder defaultBuilder() {
-        return ApacheHttpClientUtils.getDefaultBulider();
+        return ApacheHttpUtils.newDefaultBulider();
     }
 
     public void close() {

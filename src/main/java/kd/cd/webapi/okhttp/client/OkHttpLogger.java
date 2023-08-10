@@ -1,14 +1,18 @@
-package kd.cd.webapi.log;
+package kd.cd.webapi.okhttp.client;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import kd.cd.webapi.log.AbstractWebLogger;
+import kd.cd.webapi.log.LogDto;
+import kd.cd.webapi.log.LogParam;
 import kd.cd.webapi.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.Optional;
 
-public class OkHttpLogger extends AbstractNetLogger {
+public class OkHttpLogger extends AbstractWebLogger {
 
+    @Override
     public LogDto mapping(LogParam logParam) {
         LogDto logDto = new LogDto();
         ObjectNode reqNode = logParam.getReqInfo();

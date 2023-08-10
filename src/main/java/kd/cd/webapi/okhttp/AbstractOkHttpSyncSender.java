@@ -1,6 +1,7 @@
 package kd.cd.webapi.okhttp;
 
-import kd.cd.webapi.*;
+import kd.cd.webapi.ContentType;
+import kd.cd.webapi.Method;
 import kd.cd.webapi.log.LogParam;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -11,7 +12,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AbstractOkHttpSyncSender<T> implements RawSend<T>, UrlencodedSend<T>, FormDataSend<T> {
+public abstract class AbstractOkHttpSyncSender<T> implements OkHttpSyncSend<T> {
     protected OkHttpClient client;
 
     @Override

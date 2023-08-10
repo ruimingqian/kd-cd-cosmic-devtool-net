@@ -13,6 +13,9 @@ import java.util.Set;
 public class MappingConverter<V> implements MappingConvert<V> {
     private MappingConvert<V> delegate;
 
+    private MappingConverter() {
+    }
+
     public static <V> MappingConverter<V> fromJson(JSONObject jsonObject) {
         MappingConverter<V> converter = new MappingConverter<>();
         converter.delegate = new JsonConverter<>(jsonObject);

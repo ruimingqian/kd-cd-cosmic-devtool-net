@@ -3,6 +3,7 @@ package kd.cd.webapi.okhttp;
 import kd.cd.webapi.ContentType;
 import kd.cd.webapi.Method;
 import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.okhttp.client.EventTracker;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
@@ -84,9 +85,9 @@ public final class OkHttpRequestFactory {
                 .method(method.getName(), reqBody);
 
         if (logParam != null) {
-            OkHttpServiceFactory.EventTracker tracker = new OkHttpServiceFactory.EventTracker();
+            EventTracker tracker = new EventTracker();
             tracker.setLogParam(logParam);
-            reqBuilder.tag(OkHttpServiceFactory.EventTracker.class, tracker);
+            reqBuilder.tag(EventTracker.class, tracker);
         }
         if (contentType != null) {
             reqBuilder.addHeader("Content-Type", contentType.getName());

@@ -23,8 +23,8 @@ import java.util.concurrent.ExecutorService;
  * @version 1.0
  * @since cosmic 5.0
  */
-public abstract class AbstractNetLogger implements NetLog<LogParam> {
-    private static final Log log = LogFactory.getLog(AbstractNetLogger.class);
+public abstract class AbstractWebLogger implements WebLog<LogParam> {
+    private static final Log log = LogFactory.getLog(AbstractWebLogger.class);
     private static final String LOG_FORM = SystemPropertyUtils.getString("outapilog.formid.log", "outapilog");
     private static final int THREAD_NUM = SystemPropertyUtils.getInt("outapilog.logwriter.threads", 10, 2, 30);
     private static final ExecutorService exectorService = ThreadPools.newExecutorService("outapi-logger", THREAD_NUM);
@@ -49,7 +49,7 @@ public abstract class AbstractNetLogger implements NetLog<LogParam> {
         }
     }
 
-    abstract LogDto mapping(LogParam logParam);
+    protected abstract LogDto mapping(LogParam logParam);
 
     public static void save(String logFormId, RequestContext rc, LogDto logDto) {
         MainEntityType entityType = EntityMetadataCache.getDataEntityType(logFormId);
@@ -88,7 +88,7 @@ public abstract class AbstractNetLogger implements NetLog<LogParam> {
         LogORM.create().insert(list);
     }
 
-    static String formatException(Throwable t) {
+    public String formatException(Throwable t) {
         return String.format("[--- %s ---] %n%s", ExceptionUtils.getSimpleMsg(t), ExceptionUtils.getFullTraceString(t));
     }
 }

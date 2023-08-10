@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.cd.webapi.ContentType;
 import kd.cd.webapi.Method;
 import kd.cd.webapi.RespHandle;
-import kd.cd.webapi.client.OkHttpClientUtils;
 import kd.cd.webapi.log.LogParam;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
@@ -47,7 +46,7 @@ public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Respon
 
     @Override
     OkHttpClient.Builder defaultBuilder() {
-        return OkHttpClientUtils.getDefaultBulider();
+        return OkHttpUtils.newDefaultBulider();
     }
 
     static class RespHandler implements RespHandle<Response> {

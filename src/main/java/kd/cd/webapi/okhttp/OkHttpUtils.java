@@ -5,11 +5,14 @@ import kd.bos.logging.Log;
 import kd.bos.logging.LogFactory;
 import kd.cd.webapi.FailedResponseException;
 import kd.cd.webapi.NullResponseException;
+import kd.cd.webapi.okhttp.client.RespInterceptor;
+import kd.cd.webapi.okhttp.client.TrackEventListenerFactory;
+import kd.cd.webapi.ssl.MyX509TrustManager;
+import kd.cd.webapi.ssl.SSLUtils;
+import kd.cd.webapi.ssl.TrustAllHostnameVerifier;
 import kd.cd.webapi.utils.JacksonUtils;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import kd.cd.webapi.utils.SystemPropertyUtils;
+import okhttp3.*;
 import okio.Buffer;
 import okio.BufferedSource;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * OkHttp请求通用
@@ -27,8 +31,36 @@ import java.util.Optional;
  */
 public final class OkHttpUtils {
     private static final Log log = LogFactory.getLog(OkHttpUtils.class);
+    private static final long CONNECT_TIMEOUT_SECONDS = SystemPropertyUtils.getLong("okhttpclient.default.connecttimeoutseconds", 10L);
+    private static final long READ_TIMEOUT_SECONDS = SystemPropertyUtils.getLong("okhttpclient.default.readtimeoutseconds", 60L);
+    private static final long WRITE_TIMEOUT_SECONDS = SystemPropertyUtils.getLong("okhttpclient.default.writetimeoutseconds", 60L);
+    private static final boolean IGNORE_SSL_CHECK = SystemPropertyUtils.getBoolean("okhttpclient.default.ignoressl", true);
+    private static final boolean ADD_LOG_MONITOR = SystemPropertyUtils.getBoolean("okhttpclient.default.addlogmonitor", true);
 
     private OkHttpUtils() {
+    }
+
+    public static OkHttpClient.Builder newDefaultBulider() {
+        return newBulider(IGNORE_SSL_CHECK, ADD_LOG_MONITOR);
+    }
+
+    public static OkHttpClient.Builder newBulider(boolean ignoreSSL, boolean addLogMonitor) {
+        OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+
+        builder.connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        builder.readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        builder.writeTimeout(WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+
+        if (ignoreSSL) {
+            builder.sslSocketFactory(SSLUtils.newSSLSocketFactory(), new MyX509TrustManager());
+            builder.hostnameVerifier(new TrustAllHostnameVerifier());
+        }
+
+        if (addLogMonitor) {
+            builder.addInterceptor(new RespInterceptor());
+            builder.eventListenerFactory(new TrackEventListenerFactory());
+        }
+        return builder;
     }
 
     public static ObjectNode bodyToJson(Response resp) throws IOException {

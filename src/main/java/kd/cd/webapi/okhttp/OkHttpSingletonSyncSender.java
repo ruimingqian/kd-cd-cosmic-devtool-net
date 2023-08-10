@@ -6,6 +6,8 @@ import kd.cd.webapi.utils.SystemPropertyUtils;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * <b>OkHttp同步调用单例模式封装</b>
  * <p>
@@ -58,8 +60,7 @@ public class OkHttpSingletonSyncSender extends OkHttpSyncSender {
     OkHttpClient.Builder defaultBuilder() {
         OkHttpClient.Builder builder = super.defaultBuilder();
         //create a larger connection pool for sigleton instance
-        OkHttpServiceFactory sf = OkHttpServiceFactory.getInstance();
-        ConnectionPool pool = sf.newConnectionPool(SINGLETON_CONNECTPOOL_SIZE, SINGLETON_KEEPALIVE_MINUTES);
+        ConnectionPool pool = new ConnectionPool(SINGLETON_CONNECTPOOL_SIZE, SINGLETON_KEEPALIVE_MINUTES, TimeUnit.MINUTES);
         builder.connectionPool(pool);
         return builder;
     }
