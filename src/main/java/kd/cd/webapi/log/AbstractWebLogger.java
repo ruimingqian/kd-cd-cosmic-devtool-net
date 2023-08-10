@@ -89,6 +89,6 @@ public abstract class AbstractWebLogger implements WebLog<LogParam> {
     }
 
     public String formatException(Throwable t) {
-        return String.format("[--- %s ---] %n%s", ExceptionUtils.getSimpleMsg(t), ExceptionUtils.getFullTraceString(t));
+        return String.format("--- %s --- %n%s", ExceptionUtils.getSimpleMsg(t), ExceptionUtils.getFullTraceString(t));
     }
 }
