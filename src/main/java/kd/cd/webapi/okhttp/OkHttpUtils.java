@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
- * OkHttp请求通用
+ * OkHttp通用
  *
  * @author qrm
  * @version 1.0
