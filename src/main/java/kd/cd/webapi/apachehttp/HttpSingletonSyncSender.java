@@ -1,6 +1,6 @@
 package kd.cd.webapi.apachehttp;
 
-import kd.cd.webapi.utils.SystemPropertyUtils;
+import kd.cd.webapi.util.SystemPropertyUtils;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.HttpClientBuilder;
 

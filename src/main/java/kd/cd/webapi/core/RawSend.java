@@ -1,6 +1,8 @@
-package kd.cd.webapi;
+package kd.cd.webapi.core;
 
 import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.req.ContentType;
+import kd.cd.webapi.req.Method;
 
 import java.io.IOException;
 import java.util.Map;

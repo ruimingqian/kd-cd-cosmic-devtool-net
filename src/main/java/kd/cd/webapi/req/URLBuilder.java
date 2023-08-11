@@ -1,4 +1,4 @@
-package kd.cd.webapi.internal;
+package kd.cd.webapi.req;
 
 import org.apache.commons.lang3.StringUtils;
 

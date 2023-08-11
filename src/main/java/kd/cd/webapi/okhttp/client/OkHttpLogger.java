@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.cd.webapi.log.AbstractWebLogger;
 import kd.cd.webapi.log.LogDto;
 import kd.cd.webapi.log.LogParam;
-import kd.cd.webapi.utils.JsonUtils;
+import kd.cd.webapi.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;

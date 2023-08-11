@@ -1,8 +1,8 @@
 package kd.cd.webapi.apachehttp;
 
-import kd.cd.webapi.ContentType;
-import kd.cd.webapi.Method;
 import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.req.ContentType;
+import kd.cd.webapi.req.Method;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;

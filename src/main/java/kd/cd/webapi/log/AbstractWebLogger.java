@@ -9,8 +9,8 @@ import kd.bos.logging.Log;
 import kd.bos.logging.LogFactory;
 import kd.bos.logorm.LogORM;
 import kd.bos.threads.ThreadPools;
-import kd.cd.webapi.utils.ExceptionUtils;
-import kd.cd.webapi.utils.SystemPropertyUtils;
+import kd.cd.webapi.util.ExceptionUtils;
+import kd.cd.webapi.util.SystemPropertyUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package kd.cd.webapi;
+package kd.cd.webapi.core;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 

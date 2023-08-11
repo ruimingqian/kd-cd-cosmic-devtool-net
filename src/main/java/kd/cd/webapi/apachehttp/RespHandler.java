@@ -1,7 +1,7 @@
 package kd.cd.webapi.apachehttp;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import kd.cd.webapi.RespHandle;
+import kd.cd.webapi.core.RespHandle;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;

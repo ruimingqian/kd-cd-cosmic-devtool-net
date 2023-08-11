@@ -1,4 +1,4 @@
-package kd.cd.webapi.internal;
+package kd.cd.webapi.req;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -8,7 +8,7 @@ import kd.bos.orm.query.QCP;
 import kd.bos.orm.query.QFilter;
 import kd.bos.servicehelper.BusinessDataServiceHelper;
 import kd.cd.webapi.log.LogParam;
-import kd.cd.webapi.utils.SystemPropertyUtils;
+import kd.cd.webapi.util.SystemPropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

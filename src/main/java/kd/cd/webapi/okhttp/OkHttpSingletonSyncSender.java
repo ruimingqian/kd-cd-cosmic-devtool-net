@@ -1,8 +1,8 @@
 package kd.cd.webapi.okhttp;
 
-import kd.cd.webapi.internal.RequestConfCache;
 import kd.cd.webapi.log.LogParam;
-import kd.cd.webapi.utils.SystemPropertyUtils;
+import kd.cd.webapi.req.RequestConfCache;
+import kd.cd.webapi.util.SystemPropertyUtils;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 

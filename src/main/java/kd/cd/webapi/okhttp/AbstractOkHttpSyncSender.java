@@ -1,8 +1,8 @@
 package kd.cd.webapi.okhttp;
 
-import kd.cd.webapi.ContentType;
-import kd.cd.webapi.Method;
 import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.req.ContentType;
+import kd.cd.webapi.req.Method;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

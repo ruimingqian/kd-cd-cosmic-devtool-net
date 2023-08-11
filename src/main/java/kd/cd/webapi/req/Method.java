@@ -1,4 +1,4 @@
-package kd.cd.webapi;
+package kd.cd.webapi.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

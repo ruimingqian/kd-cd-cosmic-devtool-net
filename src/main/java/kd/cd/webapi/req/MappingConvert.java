@@ -1,4 +1,4 @@
-package kd.cd.webapi.internal;
+package kd.cd.webapi.req;
 
 import java.util.Map;
 

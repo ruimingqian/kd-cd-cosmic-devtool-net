@@ -135,9 +135,9 @@ public class EventTrackListener extends EventListener {
     }
 
     @Override
-    public void callFailed(@NotNull Call call, @NotNull IOException ioe) {
+    public void callFailed(@NotNull Call call, @NotNull IOException e) {
         tracker.setCallDuration(System.currentTimeMillis() - callStart);
-        toLog(ioe);
+        toLog(e);
     }
 
     private void toLog(Exception e) {

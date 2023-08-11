@@ -1,7 +1,7 @@
 package kd.cd.webapi.okhttp;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import kd.cd.webapi.RespHandle;
+import kd.cd.webapi.core.RespHandle;
 import okhttp3.Response;
 import org.apache.commons.io.IOUtils;
 

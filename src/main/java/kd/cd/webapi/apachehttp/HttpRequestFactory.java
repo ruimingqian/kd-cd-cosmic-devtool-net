@@ -1,7 +1,7 @@
 package kd.cd.webapi.apachehttp;
 
-import kd.cd.webapi.ContentType;
-import kd.cd.webapi.Method;
+import kd.cd.webapi.req.ContentType;
+import kd.cd.webapi.req.Method;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;

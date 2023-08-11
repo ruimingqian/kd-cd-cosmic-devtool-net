@@ -1,4 +1,4 @@
-package kd.cd.webapi;
+package kd.cd.webapi.exception;
 
 /**
  * 响应为空异常

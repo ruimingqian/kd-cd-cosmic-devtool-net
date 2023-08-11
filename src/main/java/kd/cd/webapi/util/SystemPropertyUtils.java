@@ -1,4 +1,4 @@
-package kd.cd.webapi.utils;
+package kd.cd.webapi.util;
 
 import javax.validation.constraints.NotNull;
 
