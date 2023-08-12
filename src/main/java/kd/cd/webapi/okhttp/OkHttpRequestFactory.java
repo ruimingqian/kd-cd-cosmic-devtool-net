@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +41,7 @@ public final class OkHttpRequestFactory {
     }
 
     public static Request newUrlencodedRequest(Method method, String url, @NotNull Map<String, String> reqMap, Map<String, String> headerMap, LogParam logParam) throws IOException {
-        ArrayList<BasicNameValuePair> list = new ArrayList<>(reqMap.size());
+        List<BasicNameValuePair> list = new ArrayList<>(reqMap.size());
         reqMap.forEach((key, value) -> list.add(new BasicNameValuePair(key, value)));
 
         UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(list, StandardCharsets.UTF_8);
