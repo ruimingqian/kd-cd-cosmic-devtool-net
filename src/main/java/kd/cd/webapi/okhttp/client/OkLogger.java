@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 import java.util.Optional;
 
-public class OkHttpLogger extends AbstractWebLogger {
+public class OkLogger extends AbstractWebLogger {
 
     @Override
     public LogDto mapping(LogParam logParam) {

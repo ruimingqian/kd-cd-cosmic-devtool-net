@@ -12,7 +12,7 @@ import java.net.Proxy;
 import java.util.List;
 
 public class EventTrackListener extends EventListener {
-    private static final OkHttpLogger okHttpLogger = new OkHttpLogger();
+    private static final OkLogger okLogger = new OkLogger();
     private final EventTracker tracker;
     private long callStart;
     private long dnsStart;
@@ -158,9 +158,9 @@ public class EventTrackListener extends EventListener {
 
         if (logParam.isEnableNewThread()) {
             logParam.setRequestContext(RequestContext.get());
-            okHttpLogger.logAsync(logParam);
+            okLogger.logAsync(logParam);
         } else {
-            okHttpLogger.log(logParam);
+            okLogger.log(logParam);
         }
     }
 }

@@ -12,11 +12,15 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Response>> {
-    public OkHttpSyncSender() {
+    OkHttpSyncSender() {
     }
 
-    public OkHttpSyncSender(OkHttpClient client) {
+    private OkHttpSyncSender(OkHttpClient client) {
         this.client = client;
+    }
+
+    public static OkHttpSyncSender of(OkHttpClient client) {
+        return new OkHttpSyncSender(client);
     }
 
     public RespHandle<Response> post(String url, String reqString, Map<String, String> headerMap, LogParam logParam) throws IOException {
@@ -42,6 +46,6 @@ public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Respon
 
     @Override
     OkHttpClient.Builder defaultBuilder() {
-        return OkHttpUtils.newDefaultBulider();
+        return OkHttpUtils.newCustomizedBuilder();
     }
 }

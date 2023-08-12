@@ -40,11 +40,11 @@ public final class OkHttpUtils {
     private OkHttpUtils() {
     }
 
-    public static OkHttpClient.Builder newDefaultBulider() {
-        return newBulider(IGNORE_SSL_CHECK, ADD_LOG_MONITOR);
+    public static OkHttpClient.Builder newCustomizedBuilder() {
+        return newBuilder(IGNORE_SSL_CHECK, ADD_LOG_MONITOR);
     }
 
-    public static OkHttpClient.Builder newBulider(boolean ignoreSSL, boolean addLogMonitor) {
+    public static OkHttpClient.Builder newBuilder(boolean ignoreSSL, boolean addLogMonitor) {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
 
         builder.connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
