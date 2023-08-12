@@ -2,6 +2,7 @@ package kd.cd.webapi.okhttp;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.cd.webapi.core.RespHandle;
+import kd.cd.webapi.exception.IllegalResponseException;
 import okhttp3.Response;
 import org.apache.commons.io.IOUtils;
 
@@ -22,24 +23,24 @@ public class RespHandler implements RespHandle<Response> {
         return resp;
     }
 
-    public ObjectNode bodyToJson() throws IOException {
+    public ObjectNode bodyToJson() throws IOException, IllegalResponseException {
         return respBodyToJson(resp);
     }
 
-    public byte[] bodyToBytes() throws IOException {
+    public byte[] bodyToBytes() throws IOException, IllegalResponseException {
         return respBodyToBytes(resp);
     }
 
-    public void writeTo(OutputStream outputStream) throws IOException {
+    public void writeTo(OutputStream outputStream) throws IOException, IllegalResponseException {
         InputStream inputStream = bodyToInputStream();
         IOUtils.copy(inputStream, outputStream);
     }
 
-    public InputStream bodyToInputStream() {
+    public InputStream bodyToInputStream() throws IllegalResponseException {
         return respBodyToInputStream(resp);
     }
 
-    public String bodyToString() throws IOException {
+    public String bodyToString() throws IOException, IllegalResponseException {
         return respBodyToString(resp);
     }
 

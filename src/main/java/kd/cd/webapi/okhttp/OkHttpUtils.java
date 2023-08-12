@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.bos.logging.Log;
 import kd.bos.logging.LogFactory;
 import kd.cd.webapi.exception.FailedResponseException;
+import kd.cd.webapi.exception.IllegalResponseException;
 import kd.cd.webapi.exception.NullResponseException;
 import kd.cd.webapi.okhttp.client.RespInterceptor;
 import kd.cd.webapi.okhttp.client.TrackEventListenerFactory;
@@ -63,32 +64,32 @@ public final class OkHttpUtils {
         return builder;
     }
 
-    public static ObjectNode respBodyToJson(Response resp) throws IOException {
+    public static ObjectNode respBodyToJson(Response resp) throws IOException, IllegalResponseException {
         String bodyString = respBodyToString(resp);
         return StringUtils.isEmpty(bodyString) ?
                 null :
                 (ObjectNode) JacksonUtils.getObjectMapper().readTree(bodyString);
     }
 
-    public static String respBodyToString(Response resp) throws IOException {
+    public static String respBodyToString(Response resp) throws IOException, IllegalResponseException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.string();
     }
 
-    public static byte[] respBodyToBytes(Response resp) throws IOException {
+    public static byte[] respBodyToBytes(Response resp) throws IOException, IllegalResponseException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.bytes();
     }
 
-    public static InputStream respBodyToInputStream(Response resp) {
+    public static InputStream respBodyToInputStream(Response resp) throws IllegalResponseException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.byteStream();
     }
 
-    public static void checkResp(Response resp) {
+    public static void checkResp(Response resp) throws IllegalResponseException {
         if (resp == null) {
             throw new NullResponseException("Okhttp response is null");
         }

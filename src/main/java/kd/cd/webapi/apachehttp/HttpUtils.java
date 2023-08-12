@@ -3,6 +3,7 @@ package kd.cd.webapi.apachehttp;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import kd.cd.webapi.apachehttp.client.RetryHandler;
 import kd.cd.webapi.exception.FailedResponseException;
+import kd.cd.webapi.exception.IllegalResponseException;
 import kd.cd.webapi.exception.NullResponseException;
 import kd.cd.webapi.ssl.SSLUtils;
 import kd.cd.webapi.ssl.TrustAllHostnameVerifier;
@@ -78,22 +79,22 @@ public final class HttpUtils {
         return connectionManager;
     }
 
-    public static ObjectNode respToJson(CloseableHttpResponse resp) throws IOException {
+    public static ObjectNode respToJson(CloseableHttpResponse resp) throws IOException, IllegalResponseException {
         String bodyString = respToString(resp);
         return StringUtils.isEmpty(bodyString) ? null : (ObjectNode) JacksonUtils.getObjectMapper().readTree(bodyString);
     }
 
-    public static String respToString(CloseableHttpResponse resp) throws IOException {
+    public static String respToString(CloseableHttpResponse resp) throws IOException, IllegalResponseException {
         checkResp(resp);
         return EntityUtils.toString(resp.getEntity(), StandardCharsets.UTF_8);
     }
 
-    public static byte[] respToBytes(CloseableHttpResponse resp) throws IOException {
+    public static byte[] respToBytes(CloseableHttpResponse resp) throws IOException, IllegalResponseException {
         checkResp(resp);
         return EntityUtils.toByteArray(resp.getEntity());
     }
 
-    public static InputStream respToInputStream(CloseableHttpResponse resp) throws IOException {
+    public static InputStream respToInputStream(CloseableHttpResponse resp) throws IOException, IllegalResponseException {
         try {
             checkResp(resp);
             return resp.getEntity().getContent();
@@ -102,7 +103,7 @@ public final class HttpUtils {
         }
     }
 
-    private static void checkResp(CloseableHttpResponse resp) {
+    private static void checkResp(CloseableHttpResponse resp) throws IllegalResponseException {
         if (resp == null) {
             throw new NullResponseException();
         }

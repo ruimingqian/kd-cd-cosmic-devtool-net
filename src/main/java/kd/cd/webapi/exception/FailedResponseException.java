@@ -7,7 +7,7 @@ package kd.cd.webapi.exception;
  * @version 1.0
  * @see RuntimeException
  */
-public class FailedResponseException extends RuntimeException {
+public class FailedResponseException extends IllegalResponseException {
     public FailedResponseException() {
         super();
     }
