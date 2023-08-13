@@ -15,27 +15,15 @@ public class OkClientRegistry {
     }
 
     public static OkHttpClient getOrRegisterAsDefault(String clientName) {
-        return getOrRegister(clientName, () -> OkHttpUtils.newCustomizedBuilder().build());
+        return getOrRegister(clientName, () ->
+                OkHttpUtils.newCustomizedBuilder().build());
     }
 
     public static OkHttpClient getOrRegister(String clientName, Supplier<OkHttpClient> clientSupplier) {
         if (StringUtils.isBlank(clientName) || clientSupplier == null) {
             throw new IllegalArgumentException();
         }
-        OkHttpClient client = clientPoolMap.get(clientName);
-
-        if (client == null) {
-            synchronized (clientPoolMap) {
-                client = clientPoolMap.get(clientName);
-
-                if (client == null) {
-                    client = clientSupplier.get();
-                    clientPoolMap.put(clientName, client);
-                    return client;
-                }
-            }
-        }
-        return client;
+        return clientPoolMap.computeIfAbsent(clientName, k -> clientSupplier.get());
     }
 
     public static void unregister(String key) {
