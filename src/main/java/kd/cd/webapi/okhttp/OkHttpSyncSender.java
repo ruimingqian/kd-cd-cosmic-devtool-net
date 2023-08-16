@@ -23,12 +23,20 @@ public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Respon
         return new OkHttpSyncSender(client);
     }
 
-    public RespHandle<Response> post(String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        return sendRawText(Method.POST, ContentType.APPLICATION_JSON, url, reqString, headerMap, logOption);
+    public RespHandle<Response> post(String url, String reqJsonString, Map<String, String> headerMap, LogOption logOption) throws IOException {
+        return sendRawText(Method.POST, ContentType.APPLICATION_JSON, url, reqJsonString, headerMap, logOption);
     }
 
-    public RespHandle<Response> get(String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        return sendRawText(Method.GET, ContentType.APPLICATION_JSON, url, reqString, headerMap, logOption);
+    public RespHandle<Response> get(String url, String reqJsonString, Map<String, String> headerMap, LogOption logOption) throws IOException {
+        return sendRawText(Method.GET, ContentType.APPLICATION_JSON, url, reqJsonString, headerMap, logOption);
+    }
+
+    public RespHandle<Response> xmlPost(String url, String reqXMLString, Map<String, String> headerMap, LogOption logOption) throws IOException {
+        return sendRawText(Method.POST, ContentType.APPLICATION_XML, url, reqXMLString, headerMap, logOption);
+    }
+
+    public RespHandle<Response> xmlGet(String url, String reqXMLString, Map<String, String> headerMap, LogOption logOption) throws IOException {
+        return sendRawText(Method.GET, ContentType.APPLICATION_XML, url, reqXMLString, headerMap, logOption);
     }
 
     public RespHandle<Response> urlencodedPost(String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
