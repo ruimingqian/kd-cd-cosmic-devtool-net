@@ -16,7 +16,7 @@ public abstract class AbstractOkHttpSyncSender<T> implements OkHttpSyncSend<T> {
     protected OkHttpClient client;
 
     @Override
-    public T sendRaw(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
+    public T sendRawText(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
         Request req = OkHttpRequestFactory.newRawRequest(method, contentType, url, reqString, headerMap, logOption);
         return execSync(req, respHandelFunction());
     }

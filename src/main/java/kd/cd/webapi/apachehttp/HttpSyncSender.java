@@ -21,11 +21,11 @@ public class HttpSyncSender extends AbstractHttpSyncSender<RespHandle<CloseableH
     }
 
     public RespHandle<CloseableHttpResponse> post(String url, String reqString, Map<String, String> headerMap) throws IOException {
-        return sendRaw(Method.POST, ContentType.APPLICATION_JSON, url, reqString, headerMap, null);
+        return sendRawText(Method.POST, ContentType.APPLICATION_JSON, url, reqString, headerMap, null);
     }
 
     public RespHandle<CloseableHttpResponse> get(String url, String reqString, Map<String, String> headerMap) throws IOException {
-        return sendRaw(Method.GET, ContentType.APPLICATION_JSON, url, reqString, headerMap, null);
+        return sendRawText(Method.GET, ContentType.APPLICATION_JSON, url, reqString, headerMap, null);
     }
 
     public RespHandle<CloseableHttpResponse> urlencodedPost(String url, Map<String, String> reqMap, Map<String, String> headerMap) throws IOException {

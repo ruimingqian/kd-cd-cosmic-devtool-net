@@ -16,7 +16,7 @@ public abstract class AbstractHttpSyncSender<T> implements HttpSyncSend<T> {
     protected CloseableHttpClient client;
 
     @Override
-    public T sendRaw(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
+    public T sendRawText(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
         HttpRequestBase request = HttpRequestFactory.newRawRequest(method, contentType, url, reqString, headerMap);
         return execSync(request, respHandelFunction());
     }

@@ -24,11 +24,11 @@ public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Respon
     }
 
     public RespHandle<Response> post(String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        return sendRaw(Method.POST, ContentType.APPLICATION_JSON, url, reqString, headerMap, logOption);
+        return sendRawText(Method.POST, ContentType.APPLICATION_JSON, url, reqString, headerMap, logOption);
     }
 
     public RespHandle<Response> get(String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        return sendRaw(Method.GET, ContentType.APPLICATION_JSON, url, reqString, headerMap, logOption);
+        return sendRawText(Method.GET, ContentType.APPLICATION_JSON, url, reqString, headerMap, logOption);
     }
 
     public RespHandle<Response> urlencodedPost(String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
