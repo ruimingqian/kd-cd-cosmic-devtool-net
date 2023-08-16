@@ -1,6 +1,6 @@
 package kd.cd.webapi.okhttp;
 
-import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.log.LogOption;
 import kd.cd.webapi.okhttp.client.EventTracker;
 import kd.cd.webapi.req.ContentType;
 import kd.cd.webapi.req.Method;
@@ -35,12 +35,12 @@ public final class OkHttpRequestFactory {
     private OkHttpRequestFactory() {
     }
 
-    public static Request newRawRequest(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogParam logParam) {
+    public static Request newRawRequest(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) {
         RequestBody body = RequestBody.create(reqString, MediaType.parse(contentType.getName()));
-        return generate(method, contentType, url, body, headerMap, logParam);
+        return generate(method, contentType, url, body, headerMap, logOption);
     }
 
-    public static Request newUrlencodedRequest(Method method, String url, @NotNull Map<String, String> reqMap, Map<String, String> headerMap, LogParam logParam) throws IOException {
+    public static Request newUrlencodedRequest(Method method, String url, @NotNull Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
         List<BasicNameValuePair> list = new ArrayList<>(reqMap.size());
         reqMap.forEach((key, value) -> list.add(new BasicNameValuePair(key, value)));
 
@@ -53,21 +53,21 @@ public final class OkHttpRequestFactory {
             String content = URLDecoder.decode(line, StandardCharsets.UTF_8.name());
 
             RequestBody body = RequestBody.create(content, MediaType.parse(ContentType.APPLICATION_URLENCODED.getName()));
-            return generate(method, ContentType.APPLICATION_URLENCODED, url, body, headerMap, logParam);
+            return generate(method, ContentType.APPLICATION_URLENCODED, url, body, headerMap, logOption);
         }
     }
 
-    public static Request newFormDataRequest(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogParam logParam) {
+    public static Request newFormDataRequest(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         for (Map.Entry<String, String> entry : reqMap.entrySet()) {
             builder.addFormDataPart(entry.getKey(), entry.getValue());
         }
         MultipartBody multipartBody = builder.build();
-        return generate(method, ContentType.TEXT_PLAIN, url, multipartBody, headerMap, logParam);
+        return generate(method, ContentType.TEXT_PLAIN, url, multipartBody, headerMap, logOption);
     }
 
-    public static Request newUploadFileRequest(Method method, String url, Map<String, File> fileMap, Map<String, String> headerMap, LogParam logParam) {
+    public static Request newUploadFileRequest(Method method, String url, Map<String, File> fileMap, Map<String, String> headerMap, LogOption logOption) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         for (Map.Entry<String, File> entry : fileMap.entrySet()) {
@@ -76,18 +76,18 @@ public final class OkHttpRequestFactory {
             builder.addFormDataPart(entry.getKey(), file.getName(), requestBody);
         }
         MultipartBody multipartBody = builder.build();
-        logParam.setRecordFullRequest(false);
-        return generate(method, null, url, multipartBody, headerMap, logParam);
+        logOption.setRecordFullRequest(false);
+        return generate(method, null, url, multipartBody, headerMap, logOption);
     }
 
-    private static Request generate(Method method, ContentType contentType, String url, RequestBody reqBody, Map<String, String> headerMap, LogParam logParam) {
+    private static Request generate(Method method, ContentType contentType, String url, RequestBody reqBody, Map<String, String> headerMap, LogOption logOption) {
         Request.Builder reqBuilder = new Request.Builder()
                 .url(url)
                 .method(method.getName(), reqBody);
 
-        if (logParam != null) {
+        if (logOption != null) {
             EventTracker tracker = new EventTracker();
-            tracker.setLogParam(logParam);
+            tracker.setLogOption(logOption);
             reqBuilder.tag(EventTracker.class, tracker);
         }
         if (contentType != null) {

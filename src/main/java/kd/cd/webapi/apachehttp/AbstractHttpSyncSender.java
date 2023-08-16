@@ -1,6 +1,6 @@
 package kd.cd.webapi.apachehttp;
 
-import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.log.LogOption;
 import kd.cd.webapi.req.ContentType;
 import kd.cd.webapi.req.Method;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -16,13 +16,13 @@ public abstract class AbstractHttpSyncSender<T> implements HttpSyncSend<T> {
     protected CloseableHttpClient client;
 
     @Override
-    public T sendRaw(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogParam logParam) throws IOException {
+    public T sendRaw(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
         HttpRequestBase request = HttpRequestFactory.newRawRequest(method, contentType, url, reqString, headerMap);
         return execSync(request, respHandelFunction());
     }
 
     @Override
-    public T sendUrlencoded(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogParam logParam) throws IOException {
+    public T sendUrlencoded(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
         HttpRequestBase request = HttpRequestFactory.newUrlencodedRequest(method, url, reqMap, headerMap);
         return execSync(request, respHandelFunction());
     }

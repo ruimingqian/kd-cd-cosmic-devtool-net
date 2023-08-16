@@ -1,7 +1,7 @@
 package kd.cd.webapi.okhttp.client;
 
 import kd.bos.context.RequestContext;
-import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.log.LogOption;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,7 +12,6 @@ import java.net.Proxy;
 import java.util.List;
 
 public class EventTrackListener extends EventListener {
-    private static final OkLogger okLogger = new OkLogger();
     private final EventTracker tracker;
     private long callStart;
     private long dnsStart;
@@ -141,26 +140,26 @@ public class EventTrackListener extends EventListener {
     }
 
     private void toLog(Exception e) {
-        LogParam logParam = tracker.getLogParam();
-        if (logParam == null) {
+        LogOption logOption = tracker.getLogOption();
+        if (logOption == null) {
             return;
         }
 
-        logParam.setTimeCost(tracker.getCallDuration());
-        logParam.setTrackInfo(tracker.toString());
+        logOption.setTimeCost(tracker.getCallDuration());
+        logOption.setTrackInfo(tracker.toString());
         if (e != null) {
-            logParam.setException(e);
+            logOption.setException(e);
         }
 
         if (RequestContext.get() == null) {
             RequestContext.set(tracker.getRequestContext());
         }
 
-        if (logParam.isEnableNewThread()) {
-            logParam.setRequestContext(RequestContext.get());
-            okLogger.logAsync(logParam);
+        if (logOption.isEnableNewThread()) {
+            logOption.setRequestContext(RequestContext.get());
+            OkLogger.require().logAsync(logOption);
         } else {
-            okLogger.log(logParam);
+            OkLogger.require().log(logOption);
         }
     }
 }

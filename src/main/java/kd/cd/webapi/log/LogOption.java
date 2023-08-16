@@ -10,8 +10,8 @@ import lombok.Setter;
  * <p>
  * <b>示例</b>
  * <pre> {@code
- *   LogParam logParam = RequestConfPool.getLogParam("apinum");
- *   LogParam logParam = new LogParam("kdcd_test", "apinum", "测试接口");
+ *   LogOption logOption = RequestConfig.logOption("apinum");
+ *   LogOption logOption = new LogOption("kdcd_test", "apinum", "测试接口");
  * }</pre>
  *
  * @author qrm
@@ -20,7 +20,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class LogParam implements Cloneable {
+public class LogOption implements Cloneable {
     /**
      * 是否开启新线程保存入库
      */
@@ -111,13 +111,13 @@ public class LogParam implements Cloneable {
      */
     private RequestContext requestContext;
 
-    public LogParam(String entityId, String apiNumber, String apiName) {
+    public LogOption(String entityId, String apiNumber, String apiName) {
         this.bizobject = entityId;
         this.opname = apiNumber;
         this.thirdappname = apiName;
     }
 
-    public LogParam(String entityId, String apiNumber, String apiName, String optype) {
+    public LogOption(String entityId, String apiNumber, String apiName, String optype) {
         this.bizobject = entityId;
         this.optype = optype;
         this.opname = apiNumber;
@@ -125,9 +125,9 @@ public class LogParam implements Cloneable {
     }
 
     @Override
-    public LogParam clone() {
+    public LogOption clone() {
         try {
-            return (LogParam) super.clone();
+            return (LogOption) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

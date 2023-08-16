@@ -1,15 +1,15 @@
 package kd.cd.webapi.req.config;
 
-import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.log.LogOption;
 
 import java.util.Map;
 
 public interface RequestConfig {
     String url();
 
-    LogParam logParam();
+    LogOption logOption();
 
-    LogParam logParam(String bizFormId);
+    LogOption logOption(String bizFormId);
 
     Integer chompSize();
 

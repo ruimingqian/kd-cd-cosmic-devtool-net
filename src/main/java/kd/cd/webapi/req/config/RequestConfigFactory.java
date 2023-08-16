@@ -9,7 +9,7 @@ public class RequestConfigFactory {
     private RequestConfigFactory() {
     }
 
-    public static RequestConfig get(String configNum) {
+    public static RequestConfig getConfig(String configNum) {
         return configPoolMap.computeIfAbsent(configNum, k -> new RequestConfigImpl(configNum));
     }
 }

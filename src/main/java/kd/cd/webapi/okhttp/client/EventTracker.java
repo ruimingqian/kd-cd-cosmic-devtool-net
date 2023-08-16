@@ -1,7 +1,7 @@
 package kd.cd.webapi.okhttp.client;
 
 import kd.bos.context.RequestContext;
-import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.log.LogOption;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +18,7 @@ public class EventTracker {
     private long requestDuration;
     private long responseDuration;
     private long serveDuration;
-    private LogParam logParam;
+    private LogOption logOption;
 
     @Override
     public String toString() {

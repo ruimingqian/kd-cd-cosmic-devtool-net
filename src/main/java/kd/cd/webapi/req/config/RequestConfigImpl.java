@@ -8,7 +8,7 @@ import kd.bos.exception.KDBizException;
 import kd.bos.orm.query.QCP;
 import kd.bos.orm.query.QFilter;
 import kd.bos.servicehelper.BusinessDataServiceHelper;
-import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.log.LogOption;
 import kd.cd.webapi.req.URLBuilder;
 import kd.cd.webapi.util.SystemPropertyUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,24 +34,24 @@ public class RequestConfigImpl implements RequestConfig {
     }
 
     @Override
-    public LogParam logParam() {
-        return logParam("");
+    public LogOption logOption() {
+        return logOption("");
     }
 
     @Override
-    public LogParam logParam(String bizFormId) {
+    public LogOption logOption(String bizFormId) {
         if (isEnableLogging()) {
-            LogParam logParam = (LogParam) getFromCache(bizFormId + "_" + configNum + "_logparam", k -> {
+            LogOption logOption = (LogOption) getFromCache(bizFormId + "_" + configNum + "_logoption", k -> {
                 DynamicObject o = loadObj();
-                return new LogParam(bizFormId, o.getString("number"), o.getString("name"));
+                return new LogOption(bizFormId, o.getString("number"), o.getString("name"));
             });
-            logParam.setEnableFormat(isEnableFormat());
+            logOption.setEnableFormat(isEnableFormat());
 
             Integer respLimit = chompSize();
             if (respLimit != null && respLimit > 0) {
-                logParam.setRespLimitSize(respLimit);
+                logOption.setRespLimitSize(respLimit);
             }
-            return logParam.clone();
+            return logOption.clone();
         } else {
             return null;
         }

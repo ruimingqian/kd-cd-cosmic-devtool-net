@@ -1,7 +1,7 @@
 package kd.cd.webapi.okhttp;
 
 import kd.cd.webapi.core.RespHandle;
-import kd.cd.webapi.log.LogParam;
+import kd.cd.webapi.log.LogOption;
 import kd.cd.webapi.req.ContentType;
 import kd.cd.webapi.req.Method;
 import okhttp3.OkHttpClient;
@@ -23,20 +23,20 @@ public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Respon
         return new OkHttpSyncSender(client);
     }
 
-    public RespHandle<Response> post(String url, String reqString, Map<String, String> headerMap, LogParam logParam) throws IOException {
-        return sendRaw(Method.POST, ContentType.APPLICATION_JSON, url, reqString, headerMap, logParam);
+    public RespHandle<Response> post(String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
+        return sendRaw(Method.POST, ContentType.APPLICATION_JSON, url, reqString, headerMap, logOption);
     }
 
-    public RespHandle<Response> get(String url, String reqString, Map<String, String> headerMap, LogParam logParam) throws IOException {
-        return sendRaw(Method.GET, ContentType.APPLICATION_JSON, url, reqString, headerMap, logParam);
+    public RespHandle<Response> get(String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
+        return sendRaw(Method.GET, ContentType.APPLICATION_JSON, url, reqString, headerMap, logOption);
     }
 
-    public RespHandle<Response> urlencodedPost(String url, Map<String, String> reqMap, Map<String, String> headerMap, LogParam logParam) throws IOException {
-        return sendUrlencoded(Method.POST, url, reqMap, headerMap, logParam);
+    public RespHandle<Response> urlencodedPost(String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
+        return sendUrlencoded(Method.POST, url, reqMap, headerMap, logOption);
     }
 
-    public RespHandle<Response> urlencodedGet(String url, Map<String, String> reqMap, Map<String, String> headerMap, LogParam logParam) throws IOException {
-        return sendUrlencoded(Method.GET, url, reqMap, headerMap, logParam);
+    public RespHandle<Response> urlencodedGet(String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
+        return sendUrlencoded(Method.GET, url, reqMap, headerMap, logOption);
     }
 
     @Override
