@@ -5,23 +5,23 @@ import kd.cd.webapi.log.LogParam;
 import java.util.Map;
 
 public interface RequestConfig {
-    LogParam getLogParam();
+    String url();
 
-    LogParam getLogParam(String bizFormId);
+    LogParam logParam();
 
-    Integer getChompSize();
+    LogParam logParam(String bizFormId);
+
+    Integer chompSize();
+
+    String getCustomParam(String key);
+
+    Map<String, Object> allCustomParamMap();
+
+    String reqTemplateText();
+
+    Object getProperty(String property);
 
     boolean isEnableFormat();
 
     boolean isEnableLogging();
-
-    String getUrl();
-
-    String getCustomParam(String key);
-
-    Map<String, Object> getAllCustomParamAsMap();
-
-    String getReqTemplateAsText();
-
-    Object getProperty(String property);
 }

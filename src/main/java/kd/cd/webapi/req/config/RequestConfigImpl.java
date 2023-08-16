@@ -20,10 +20,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class RequestConfigImpl implements RequestConfig {
-    private static final LocalMemoryCache cache;
     protected static final String REQUEST_FORM = SystemPropertyUtils.getString("outapilog.formid.3rdreq", "kdcd_3rdrequst");
     protected static final int MAX_SIZE = SystemPropertyUtils.getInt("reqconfigcache.default.maxsize", 5000);
     protected static final int EXPIRE_SECONDS = SystemPropertyUtils.getInt("reqconfigcache.default.expireseconds", 600);
+    private static final LocalMemoryCache cache;
     protected String configNum;
 
     RequestConfigImpl(String configNum) {
@@ -34,12 +34,12 @@ public class RequestConfigImpl implements RequestConfig {
     }
 
     @Override
-    public LogParam getLogParam() {
-        return getLogParam("");
+    public LogParam logParam() {
+        return logParam("");
     }
 
     @Override
-    public LogParam getLogParam(String bizFormId) {
+    public LogParam logParam(String bizFormId) {
         if (isEnableLogging()) {
             LogParam logParam = (LogParam) getFromCache(bizFormId + "_" + configNum + "_logparam", k -> {
                 DynamicObject o = loadObj();
@@ -47,7 +47,7 @@ public class RequestConfigImpl implements RequestConfig {
             });
             logParam.setEnableFormat(isEnableFormat());
 
-            Integer respLimit = getChompSize();
+            Integer respLimit = chompSize();
             if (respLimit != null && respLimit > 0) {
                 logParam.setRespLimitSize(respLimit);
             }
@@ -58,7 +58,7 @@ public class RequestConfigImpl implements RequestConfig {
     }
 
     @Override
-    public String getUrl() {
+    public String url() {
         return (String) getFromCache(configNum + "_url", k -> {
             DynamicObject o = loadObj();
             return new URLBuilder()
@@ -69,6 +69,7 @@ public class RequestConfigImpl implements RequestConfig {
         });
     }
 
+    @Override
     public String getCustomParam(String key) {
         return loadObj().getDynamicObjectCollection("entry").stream()
                 .filter(a -> a.getString("key").equals(key))
@@ -77,16 +78,19 @@ public class RequestConfigImpl implements RequestConfig {
                 .orElse("");
     }
 
-    public Map<String, Object> getAllCustomParamAsMap() {
+    @Override
+    public Map<String, Object> allCustomParamMap() {
         return loadObj().getDynamicObjectCollection("entry").stream()
                 .collect(Collectors.toMap(k -> k.getString("key"), v -> v.get("value")));
     }
 
-    public String getReqTemplateAsText() {
+    @Override
+    public String reqTemplateText() {
         return (String) getProperty("body_tag");
     }
 
-    public Integer getChompSize() {
+    @Override
+    public Integer chompSize() {
         try {
             return (Integer) getProperty("resplimit");
         } catch (Exception e) {
@@ -94,6 +98,7 @@ public class RequestConfigImpl implements RequestConfig {
         }
     }
 
+    @Override
     public boolean isEnableFormat() {
         try {
             return (Boolean) getProperty("formatlog");
@@ -102,6 +107,7 @@ public class RequestConfigImpl implements RequestConfig {
         }
     }
 
+    @Override
     public boolean isEnableLogging() {
         try {
             return (Boolean) getProperty("enablelog");
@@ -110,6 +116,7 @@ public class RequestConfigImpl implements RequestConfig {
         }
     }
 
+    @Override
     public Object getProperty(String property) {
         return loadObj().get(property);
     }
