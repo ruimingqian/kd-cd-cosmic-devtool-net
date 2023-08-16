@@ -44,7 +44,7 @@ public class OkHttpSingletonSyncSender extends OkHttpSyncSender {
         }
     }
 
-    public static OkHttpSingletonSyncSender load() {
+    public static OkHttpSingletonSyncSender require() {
         if (sender == null) {
             synchronized (OkHttpSingletonSyncSender.class) {
                 if (sender == null) {

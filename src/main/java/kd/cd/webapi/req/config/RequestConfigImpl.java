@@ -42,8 +42,8 @@ public class RequestConfigImpl implements RequestConfig {
     public LogParam getLogParam(String bizFormId) {
         if (isEnableLogging()) {
             LogParam logParam = (LogParam) getFromCache(bizFormId + "_" + configNum + "_logparam", k -> {
-                DynamicObject obj = loadObj();
-                return new LogParam(bizFormId, obj.getString("number"), obj.getString("name"));
+                DynamicObject o = loadObj();
+                return new LogParam(bizFormId, o.getString("number"), o.getString("name"));
             });
             logParam.setEnableFormat(isEnableFormat());
 
