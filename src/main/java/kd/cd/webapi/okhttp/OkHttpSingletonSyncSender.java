@@ -1,7 +1,6 @@
 package kd.cd.webapi.okhttp;
 
 import kd.cd.webapi.log.LogParam;
-import kd.cd.webapi.req.config.CaffeineImpl;
 import kd.cd.webapi.util.SystemPropertyUtils;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -17,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * （3）Request参数可通过{@link OkHttpRequestFactory}类生成
  * <p>
- * （4）传入日志参数{@link LogParam}可记录详细调用日志至系统日志表单，推荐使用{@link CaffeineImpl}从缓存池中获取
+ * （4）传入日志参数{@link LogParam}可记录详细调用日志至系统日志表单
  * <p>
  * （5）调用结果对象{@link RespHandler }内置对{@link okhttp3.Response}的各种处理
  *

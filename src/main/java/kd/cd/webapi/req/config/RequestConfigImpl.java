@@ -1,5 +1,8 @@
 package kd.cd.webapi.req.config;
 
+import kd.bos.cache.CacheConfigInfo;
+import kd.bos.cache.CacheFactory;
+import kd.bos.cache.LocalMemoryCache;
 import kd.bos.dataentity.entity.DynamicObject;
 import kd.bos.exception.KDBizException;
 import kd.bos.orm.query.QCP;
@@ -16,13 +19,14 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class AbstractRequestConfCache implements RequestConfCache {
+public class RequestConfigImpl implements RequestConfig {
+    private static final LocalMemoryCache cache;
     protected static final String REQUEST_FORM = SystemPropertyUtils.getString("outapilog.formid.3rdreq", "kdcd_3rdrequst");
     protected static final int MAX_SIZE = SystemPropertyUtils.getInt("reqconfigcache.default.maxsize", 5000);
     protected static final int EXPIRE_SECONDS = SystemPropertyUtils.getInt("reqconfigcache.default.expireseconds", 600);
     protected String configNum;
 
-    AbstractRequestConfCache(String configNum) {
+    RequestConfigImpl(String configNum) {
         this.configNum = configNum;
         if (StringUtils.isBlank(configNum)) {
             throw new IllegalArgumentException("Empty 3rdapi config number");
@@ -38,7 +42,7 @@ public abstract class AbstractRequestConfCache implements RequestConfCache {
     public LogParam getLogParam(String bizFormId) {
         if (isEnableLogging()) {
             LogParam logParam = (LogParam) getFromCache(bizFormId + "_" + configNum + "_logparam", k -> {
-                DynamicObject obj = loadOrQuery();
+                DynamicObject obj = loadObj();
                 return new LogParam(bizFormId, obj.getString("number"), obj.getString("name"));
             });
             logParam.setEnableFormat(isEnableFormat());
@@ -56,7 +60,7 @@ public abstract class AbstractRequestConfCache implements RequestConfCache {
     @Override
     public String getUrl() {
         return (String) getFromCache(configNum + "_url", k -> {
-            DynamicObject o = loadOrQuery();
+            DynamicObject o = loadObj();
             return new URLBuilder()
                     .doMain(o.getString("domain"))
                     .port(o.getInt("port"))
@@ -66,7 +70,7 @@ public abstract class AbstractRequestConfCache implements RequestConfCache {
     }
 
     public String getCustomParam(String key) {
-        return loadOrQuery().getDynamicObjectCollection("entry").stream()
+        return loadObj().getDynamicObjectCollection("entry").stream()
                 .filter(a -> a.getString("key").equals(key))
                 .map(o -> o.getString("value"))
                 .findFirst()
@@ -74,7 +78,7 @@ public abstract class AbstractRequestConfCache implements RequestConfCache {
     }
 
     public Map<String, Object> getAllCustomParamAsMap() {
-        return loadOrQuery().getDynamicObjectCollection("entry").stream()
+        return loadObj().getDynamicObjectCollection("entry").stream()
                 .collect(Collectors.toMap(k -> k.getString("key"), v -> v.get("value")));
     }
 
@@ -107,23 +111,38 @@ public abstract class AbstractRequestConfCache implements RequestConfCache {
     }
 
     public Object getProperty(String property) {
-        return loadOrQuery().get(property);
+        return loadObj().get(property);
     }
 
-    public abstract DynamicObject loadOrQuery();
+    private DynamicObject loadObj() {
+        return (DynamicObject) getFromCache(configNum + "_config", k -> {
+            List<QFilter> filters = new ArrayList<>();
+            filters.add(new QFilter("status", QCP.equals, "C"));
+            filters.add(new QFilter("enable", QCP.equals, "1"));
+            filters.add(new QFilter("number", QCP.equals, configNum));
 
-    public abstract <T> Object getFromCache(String key, Function<? super String, ? extends T> function);
+            DynamicObject single = BusinessDataServiceHelper.loadSingleFromCache(REQUEST_FORM, filters.toArray(new QFilter[0]));
+            if (single == null) {
+                throw new KDBizException(String.format("获取接口配置信息失败！编码为'%s'的第三方接口信息未配置或已被禁用", configNum));
+            }
+            return single;
+        });
+    }
 
-    DynamicObject query() {
-        List<QFilter> filters = new ArrayList<>();
-        filters.add(new QFilter("status", QCP.equals, "C"));
-        filters.add(new QFilter("enable", QCP.equals, "1"));
-        filters.add(new QFilter("number", QCP.equals, configNum));
-
-        DynamicObject single = BusinessDataServiceHelper.loadSingleFromCache(REQUEST_FORM, filters.toArray(new QFilter[0]));
-        if (single == null) {
-            throw new KDBizException(String.format("获取接口配置信息失败！编码为'%s'的第三方接口信息未配置或已被禁用", configNum));
+    private static <T> Object getFromCache(String key, Function<? super String, ? extends T> function) {
+        Object o = cache.get(key);
+        if (o == null) {
+            T t = function.apply(key);
+            cache.put(key, t);
+            return t;
         }
-        return single;
+        return o;
+    }
+
+    static {
+        CacheConfigInfo localConfig = new CacheConfigInfo();
+        localConfig.setMaxItemSize(MAX_SIZE);
+        localConfig.setTimeout(EXPIRE_SECONDS);
+        cache = CacheFactory.getCommonCacheFactory().$getOrCreateLocalMemoryCache("api_region", "3rdapi", localConfig);
     }
 }

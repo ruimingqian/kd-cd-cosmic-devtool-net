@@ -4,7 +4,7 @@ import kd.cd.webapi.log.LogParam;
 
 import java.util.Map;
 
-public interface RequestConfCache {
+public interface RequestConfig {
     LogParam getLogParam();
 
     LogParam getLogParam(String bizFormId);
