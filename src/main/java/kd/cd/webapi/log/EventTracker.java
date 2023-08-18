@@ -1,7 +1,6 @@
-package kd.cd.webapi.okhttp.client;
+package kd.cd.webapi.log;
 
 import kd.bos.context.RequestContext;
-import kd.cd.webapi.log.LogOption;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class EventTracker {
-    private RequestContext requestContext;
+    private LogOption logOption;
     private long callDuration;
     private long dnsDuration;
     private long connetDuration;
@@ -18,7 +17,25 @@ public class EventTracker {
     private long requestDuration;
     private long responseDuration;
     private long serveDuration;
-    private LogOption logOption;
+
+    public void log(Exception e) {
+        if (logOption == null) {
+            return;
+        }
+
+        logOption.timeCost = callDuration;
+        logOption.trackInfo = toString();
+        if (e != null) {
+            logOption.exception = e;
+        }
+
+        if (logOption.enableNewThread) {
+            logOption.requestContext = RequestContext.get();
+            OkLogger.require().logAsync(logOption);
+        } else {
+            OkLogger.require().log(logOption);
+        }
+    }
 
     @Override
     public String toString() {

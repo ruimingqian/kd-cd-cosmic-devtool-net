@@ -1,7 +1,7 @@
 package kd.cd.webapi.okhttp;
 
+import kd.cd.webapi.log.EventTracker;
 import kd.cd.webapi.log.LogOption;
-import kd.cd.webapi.okhttp.client.EventTracker;
 import kd.cd.webapi.req.ContentType;
 import kd.cd.webapi.req.Method;
 import okhttp3.MediaType;
@@ -31,8 +31,8 @@ import java.util.Map;
  * @see Method
  * @see ContentType
  */
-public final class OkHttpRequestFactory {
-    private OkHttpRequestFactory() {
+public final class RequestFactory {
+    private RequestFactory() {
     }
 
     public static Request newRawRequest(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) {

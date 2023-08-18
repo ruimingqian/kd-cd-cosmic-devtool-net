@@ -1,6 +1,18 @@
 package kd.cd.webapi.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import lombok.SneakyThrows;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.jetbrains.annotations.NotNull;
+import shaded.com.alibaba.fastjson.JSON;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * JSON转换工具
@@ -9,6 +21,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @version 1.0
  */
 public final class JsonUtils {
+    private static final SAXReader SAX_READER = safeSaxReader();
+
     private JsonUtils() {
     }
 
@@ -80,12 +94,81 @@ public final class JsonUtils {
     }
 
     public static boolean isValidJSON(String str) {
-        boolean valid = true;
-        try {
-            JacksonUtils.getObjectMapper().readTree(str);
-        } catch (JsonProcessingException e) {
-            valid = false;
+        return JSON.isValid(str) || JSON.isValidArray(str);
+    }
+
+    @SneakyThrows
+    public static JSONObject parseXMLFile(File file) {
+        Document document = SAX_READER.read(file);
+        return parseXML(document);
+    }
+
+    @SneakyThrows
+    public static JSONObject parseXMLInputStream(InputStream in) {
+        Document document = SAX_READER.read(in);
+        return parseXML(document);
+    }
+
+    @SneakyThrows
+    public static JSONObject parseXML(String xml) {
+        Document document = DocumentHelper.parseText(xml);
+        return parseXML(document);
+    }
+
+    @NotNull
+    public static JSONObject parseXML(Document document) {
+        JSONObject json = new JSONObject();
+        Element root = document.getRootElement();
+        iterNodes(root, json);
+        return json;
+    }
+
+    private static void iterNodes(Element node, JSONObject json) {
+        String nodeName = node.getName();
+        if (json.containsKey(nodeName)) {
+            Object o = json.get(nodeName);
+            JSONArray array;
+            if (o instanceof JSONArray) {
+                array = (JSONArray) o;
+            } else {
+                array = new JSONArray();
+                array.add(o);
+            }
+            List<Element> listElement = node.elements();
+            if (listElement.isEmpty()) {
+                String nodeValue = node.getTextTrim();
+                array.add(nodeValue);
+                json.put(nodeName, array);
+                return;
+            }
+            JSONObject newJson = new JSONObject();
+            for (Element e : listElement) {
+                iterNodes(e, newJson);
+            }
+            array.add(newJson);
+            json.put(nodeName, array);
+            return;
         }
-        return valid;
+        List<Element> listElement = node.elements();
+        if (listElement.isEmpty()) {
+            String nodeValue = node.getTextTrim();
+            json.put(nodeName, nodeValue);
+            return;
+        }
+        JSONObject object = new JSONObject();
+        for (Element e : listElement) {
+            iterNodes(e, object);
+        }
+        json.put(nodeName, object);
+    }
+
+    @SneakyThrows
+    private static SAXReader safeSaxReader() {
+        SAXReader saxReader = new SAXReader();
+        saxReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        saxReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        saxReader.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        saxReader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        return saxReader;
     }
 }

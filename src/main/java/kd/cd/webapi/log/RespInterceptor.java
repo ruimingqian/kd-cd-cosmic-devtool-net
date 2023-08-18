@@ -1,7 +1,6 @@
-package kd.cd.webapi.okhttp.client;
+package kd.cd.webapi.log;
 
-import kd.cd.webapi.log.LogOption;
-import kd.cd.webapi.okhttp.OkHttpUtils;
+import kd.cd.webapi.util.OkHttpUtils;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -29,12 +28,12 @@ public class RespInterceptor implements Interceptor {
             resp = chain.proceed(req);
 
         } catch (Exception e) {
-            logOption.setException(e);
+            logOption.exception = e;
             throw e;
 
         } finally {
-            logOption.setReqInfo(OkHttpUtils.fullReqToJson(req, logOption.isRecordFullRequest()));
-            logOption.setRespInfo(OkHttpUtils.fullRespToJson(resp, logOption.isRecordFullResponse()));
+            logOption.reqInfo = OkHttpUtils.fullReqToJson(req, logOption.recordFullRequest);
+            logOption.respInfo = OkHttpUtils.fullRespToJson(resp, logOption.recordFullResponse);
         }
 
         return resp;

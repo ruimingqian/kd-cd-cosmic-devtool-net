@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * （1）OkHttp的单例模式封装，避免重复创建{@link OkHttpClient}对象，请勿通过反射破坏单例
  * <p>
- * （2）Socket读写超时时间均默认60s，可在MC系统公共参数项进行配置。如需设置自定义Client参数，请使用{@link OkHttpSyncSender}
+ * （2）Socket读写超时时间均默认60s，可在MC系统公共参数项进行配置。如需设置自定义Client参数，请使用{@link SyncSender}
  * <p>
- * （3）Request参数可通过{@link OkHttpRequestFactory}类生成
+ * （3）Request参数可通过{@link RequestFactory}类生成
  * <p>
  * （4）传入日志参数{@link LogOption}可记录详细调用日志至系统日志表单
  * <p>
@@ -23,32 +23,32 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * <b>示例</b>
  * <pre> {@code
- *    JSONObject json = OkHttpSingletonSyncSender.load()
- *                     .urlencodedPOST(url, reqMap, null, logOption)
- *                     .bodyToJson()
+ *    String str = SyncSingletonSender.require()
+ *                  .urlencodedPost(url, reqMap, null, logOption)
+ *                  .bodyToString()
  * }</pre>
  *
  * @author qrm
  * @version 1.2
- * @see AbstractOkHttpSyncSender
+ * @see AbstractSyncSender
  */
-public class OkHttpSingletonSyncSender extends OkHttpSyncSender {
+public class SyncSingletonSender extends SyncSender {
     protected static final int SINGLETON_CONNECTPOOL_SIZE = SystemPropertyUtils.getInt("okhttpclient.singleton.connectpoolsize", 32);
     protected static final long SINGLETON_KEEPALIVE_MINUTES = SystemPropertyUtils.getLong("okhttpclient.singleton.keepaliveminutes", 5L);
 
-    private static volatile OkHttpSingletonSyncSender sender;
+    private static volatile SyncSingletonSender sender;
 
-    private OkHttpSingletonSyncSender() {
+    private SyncSingletonSender() {
         if (sender != null) {
             throw new IllegalStateException("No reflection allowed here");
         }
     }
 
-    public static OkHttpSingletonSyncSender require() {
+    public static SyncSingletonSender require() {
         if (sender == null) {
-            synchronized (OkHttpSingletonSyncSender.class) {
+            synchronized (SyncSingletonSender.class) {
                 if (sender == null) {
-                    sender = new OkHttpSingletonSyncSender();
+                    sender = new SyncSingletonSender();
                 }
             }
         }

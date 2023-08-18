@@ -12,24 +12,24 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AbstractOkHttpSyncSender<T> implements OkHttpSyncSend<T> {
+public abstract class AbstractSyncSender<T> implements SyncSend<T> {
     protected OkHttpClient client;
 
     @Override
     public T sendRawText(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        Request req = OkHttpRequestFactory.newRawRequest(method, contentType, url, reqString, headerMap, logOption);
+        Request req = RequestFactory.newRawRequest(method, contentType, url, reqString, headerMap, logOption);
         return execSync(req, respHandelFunction());
     }
 
     @Override
     public T sendUrlencoded(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        Request req = OkHttpRequestFactory.newUrlencodedRequest(method, url, reqMap, headerMap, logOption);
+        Request req = RequestFactory.newUrlencodedRequest(method, url, reqMap, headerMap, logOption);
         return execSync(req, respHandelFunction());
     }
 
     @Override
     public T sendFormData(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        Request req = OkHttpRequestFactory.newFormDataRequest(method, url, reqMap, headerMap, logOption);
+        Request req = RequestFactory.newFormDataRequest(method, url, reqMap, headerMap, logOption);
         return execSync(req, respHandelFunction());
     }
 

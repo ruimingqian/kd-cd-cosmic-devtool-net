@@ -1,7 +1,5 @@
-package kd.cd.webapi.okhttp.client;
+package kd.cd.webapi.log;
 
-import kd.bos.context.RequestContext;
-import kd.cd.webapi.log.LogOption;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,7 +9,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.List;
 
-public class EventTrackListener extends EventListener {
+public class DurationListener extends EventListener {
     private final EventTracker tracker;
     private long callStart;
     private long dnsStart;
@@ -21,7 +19,7 @@ public class EventTrackListener extends EventListener {
     private long responseStart;
     private long requestBodyEnd;
 
-    public EventTrackListener(EventTracker tracker) {
+    public DurationListener(EventTracker tracker) {
         this.tracker = tracker;
     }
 
@@ -130,36 +128,12 @@ public class EventTrackListener extends EventListener {
     @Override
     public void callEnd(@NotNull Call call) {
         tracker.setCallDuration(System.currentTimeMillis() - callStart);
-        toLog(null);
+        tracker.log(null);
     }
 
     @Override
     public void callFailed(@NotNull Call call, @NotNull IOException e) {
         tracker.setCallDuration(System.currentTimeMillis() - callStart);
-        toLog(e);
-    }
-
-    private void toLog(Exception e) {
-        LogOption logOption = tracker.getLogOption();
-        if (logOption == null) {
-            return;
-        }
-
-        logOption.setTimeCost(tracker.getCallDuration());
-        logOption.setTrackInfo(tracker.toString());
-        if (e != null) {
-            logOption.setException(e);
-        }
-
-        if (RequestContext.get() == null) {
-            RequestContext.set(tracker.getRequestContext());
-        }
-
-        if (logOption.isEnableNewThread()) {
-            logOption.setRequestContext(RequestContext.get());
-            OkLogger.require().logAsync(logOption);
-        } else {
-            OkLogger.require().log(logOption);
-        }
+        tracker.log(e);
     }
 }

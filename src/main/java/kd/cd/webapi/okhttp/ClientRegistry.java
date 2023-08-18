@@ -1,6 +1,6 @@
-package kd.cd.webapi.okhttp.client;
+package kd.cd.webapi.okhttp;
 
-import kd.cd.webapi.okhttp.OkHttpUtils;
+import kd.cd.webapi.util.OkHttpUtils;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-public class OkClientRegistry {
+public class ClientRegistry {
     private static final Map<String, OkHttpClient> clientPoolMap = new ConcurrentHashMap<>(8);
 
-    private OkClientRegistry() {
+    private ClientRegistry() {
     }
 
     public static OkHttpClient getOrRegisterAsDefault(String clientName) {

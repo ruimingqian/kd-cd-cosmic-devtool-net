@@ -1,9 +1,9 @@
 package kd.cd.webapi.okhttp;
 
-import kd.cd.webapi.core.RespHandle;
 import kd.cd.webapi.log.LogOption;
 import kd.cd.webapi.req.ContentType;
 import kd.cd.webapi.req.Method;
+import kd.cd.webapi.util.OkHttpUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
@@ -11,16 +11,16 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
-public class OkHttpSyncSender extends AbstractOkHttpSyncSender<RespHandle<Response>> {
-    OkHttpSyncSender() {
+public class SyncSender extends AbstractSyncSender<RespHandle<Response>> {
+    SyncSender() {
     }
 
-    private OkHttpSyncSender(OkHttpClient client) {
+    private SyncSender(OkHttpClient client) {
         this.client = client;
     }
 
-    public static OkHttpSyncSender of(OkHttpClient client) {
-        return new OkHttpSyncSender(client);
+    public static SyncSender of(OkHttpClient client) {
+        return new SyncSender(client);
     }
 
     public RespHandle<Response> post(String url, String reqJsonString, Map<String, String> headerMap, LogOption logOption) throws IOException {

@@ -1,8 +1,7 @@
 package kd.cd.webapi.log;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.alibaba.fastjson.JSONObject;
 import kd.bos.context.RequestContext;
-import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -18,108 +17,108 @@ import lombok.Setter;
  * @version 1.0
  * @since cosmic 5.0
  */
-@Getter
-@Setter
 public class LogOption implements Cloneable {
+
     /**
      * 是否开启新线程保存入库
      */
-    private boolean enableNewThread = true;
+    @Setter
+    protected boolean enableNewThread = true;
 
     /**
      * 是否记录完整请求信息（是否包含请求体内容）
      */
-    private boolean recordFullRequest = true;
+    @Setter
+    protected boolean recordFullRequest = true;
 
     /**
      * 是否记录完整响应信息（是否包含响应体内容）
      */
-    private boolean recordFullResponse = true;
+    @Setter
+    protected boolean recordFullResponse = true;
 
     /**
      * 是否格式化请求响应信息
      */
-    private boolean enableFormat;
+    @Setter
+    protected boolean enableFormat;
 
     /**
      * 响应截取长度
      */
-    private Integer respLimitSize;
+    @Setter
+    protected Integer respLimitSize;
 
     /**
      * 表单标识
      */
-    private String bizobject;
+    protected String bizobject;
 
     /**
      * 操作类型
      */
-    private String optype;
+    protected String optype;
 
     /**
      * 云(可选，传入表单标识后可不传)
      */
-    private String cloudname;
+    @Setter
+    protected String cloudname;
 
     /**
      * 应用((可选，传入表单标识后可不传))
      */
-    private String appname;
+    @Setter
+    protected String appname;
 
     /**
      * 第三方API编码
      */
-    private String opname;
+    protected String opname;
 
     /**
      * 第三方名称
      */
-    private String thirdappname;
+    protected String thirdappname;
 
     /**
      * 异常信息
      */
-    private Exception exception;
+    protected Exception exception;
 
     /**
      * 请求耗时(ms)
      */
-    private long timeCost;
+    protected long timeCost;
 
     /**
      * 自定义信息
      */
-    private String customTag;
+    @Setter
+    protected String customTag;
 
     /**
      * 请求阶段耗时
      */
-    private String trackInfo;
+    protected String trackInfo;
 
     /**
      * 请求信息
      */
-    private ObjectNode reqInfo;
+    protected JSONObject reqInfo;
 
     /**
      * 响应信息
      */
-    private ObjectNode respInfo;
+    protected JSONObject respInfo;
 
     /**
      * RequestContext
      */
-    private RequestContext requestContext;
+    protected RequestContext requestContext;
 
     public LogOption(String entityId, String apiNumber, String apiName) {
         this.bizobject = entityId;
-        this.opname = apiNumber;
-        this.thirdappname = apiName;
-    }
-
-    public LogOption(String entityId, String apiNumber, String apiName, String optype) {
-        this.bizobject = entityId;
-        this.optype = optype;
         this.opname = apiNumber;
         this.thirdappname = apiName;
     }

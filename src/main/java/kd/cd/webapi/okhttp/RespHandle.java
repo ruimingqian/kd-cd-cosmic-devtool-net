@@ -1,6 +1,6 @@
-package kd.cd.webapi.core;
+package kd.cd.webapi.okhttp;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.alibaba.fastjson.JSONObject;
 import kd.cd.webapi.exception.IllegalResponseException;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ public interface RespHandle<R> {
 
     String bodyToString() throws IOException, IllegalResponseException;
 
-    ObjectNode bodyToJson() throws IOException, IllegalResponseException;
+    JSONObject bodyToJson() throws IOException, IllegalResponseException;
 
     byte[] bodyToBytes() throws IOException, IllegalResponseException;
 

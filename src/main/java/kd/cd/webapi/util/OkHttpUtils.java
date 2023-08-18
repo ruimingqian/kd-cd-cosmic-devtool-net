@@ -1,18 +1,17 @@
-package kd.cd.webapi.okhttp;
+package kd.cd.webapi.util;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import kd.bos.logging.Log;
 import kd.bos.logging.LogFactory;
 import kd.cd.webapi.exception.FailedResponseException;
 import kd.cd.webapi.exception.IllegalResponseException;
 import kd.cd.webapi.exception.NullResponseException;
-import kd.cd.webapi.okhttp.client.RespInterceptor;
-import kd.cd.webapi.okhttp.client.TrackEventListenerFactory;
+import kd.cd.webapi.log.DruationListenerFactory;
+import kd.cd.webapi.log.RespInterceptor;
 import kd.cd.webapi.ssl.MyX509TrustManager;
 import kd.cd.webapi.ssl.SSLUtils;
 import kd.cd.webapi.ssl.TrustAllHostnameVerifier;
-import kd.cd.webapi.util.JacksonUtils;
-import kd.cd.webapi.util.SystemPropertyUtils;
 import okhttp3.*;
 import okio.Buffer;
 import okio.BufferedSource;
@@ -59,16 +58,16 @@ public final class OkHttpUtils {
 
         if (addLogMonitor) {
             builder.addInterceptor(new RespInterceptor());
-            builder.eventListenerFactory(new TrackEventListenerFactory());
+            builder.eventListenerFactory(new DruationListenerFactory());
         }
         return builder;
     }
 
-    public static ObjectNode respBodyToJson(Response resp) throws IOException, IllegalResponseException {
+    public static JSONObject respBodyToJson(Response resp) throws IOException, IllegalResponseException {
         String bodyString = respBodyToString(resp);
         return StringUtils.isEmpty(bodyString) ?
                 null :
-                (ObjectNode) JacksonUtils.getObjectMapper().readTree(bodyString);
+                JSON.parseObject(bodyString);
     }
 
     public static String respBodyToString(Response resp) throws IOException, IllegalResponseException {
@@ -98,9 +97,9 @@ public final class OkHttpUtils {
         }
     }
 
-    public static ObjectNode fullReqToJson(Request req, boolean includeBody) {
+    public static JSONObject fullReqToJson(Request req, boolean includeBody) {
         return Optional.ofNullable(req).map(r -> {
-                    ObjectNode json = JacksonUtils.getObjectMapper().createObjectNode();
+                    JSONObject json = new JSONObject();
                     json.put("url", r.url().toString());
                     json.put("method", r.method());
                     json.put("headers", r.headers().toString());
@@ -110,9 +109,9 @@ public final class OkHttpUtils {
         ).orElse(null);
     }
 
-    public static ObjectNode fullRespToJson(Response resp, boolean includeBody) {
+    public static JSONObject fullRespToJson(Response resp, boolean includeBody) {
         return Optional.ofNullable(resp).map(r -> {
-                    ObjectNode json = JacksonUtils.getObjectMapper().createObjectNode();
+                    JSONObject json = new JSONObject();
                     json.put("success", resp.isSuccessful());
                     json.put("headers", resp.headers().toString());
                     json.put("message", resp.message());
