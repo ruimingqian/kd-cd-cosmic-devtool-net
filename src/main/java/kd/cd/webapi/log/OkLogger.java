@@ -72,7 +72,6 @@ public class OkLogger {
     }
 
     private static void save(RequestContext rc, LogOption logOption) {
-
         JSONObject reqObj = logOption.reqInfo;
 
         String url = Optional.ofNullable(reqObj)
