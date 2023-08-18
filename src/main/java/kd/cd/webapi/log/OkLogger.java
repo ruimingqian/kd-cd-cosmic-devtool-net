@@ -25,8 +25,8 @@ import java.util.concurrent.ExecutorService;
 public class OkLogger {
     private static final String LOG_FORM = SystemPropertyUtils.getString("outapilog.formid.log", "outapilog");
     private static final int THREAD_NUM = SystemPropertyUtils.getInt("outapilog.logwriter.threads", 10, 2, 30);
-    private static final ExecutorService exectorService = ThreadPools.newExecutorService("outapi-logger", THREAD_NUM);
     private static final Log log = LogFactory.getLog(OkLogger.class);
+    private static final ExecutorService exectorService = ThreadPools.newExecutorService("outapi-logger", THREAD_NUM);
     private static volatile OkLogger okLogger;
 
     private OkLogger() {

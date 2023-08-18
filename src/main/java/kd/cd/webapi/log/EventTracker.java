@@ -22,9 +22,9 @@ public class EventTracker {
         if (logOption == null) {
             return;
         }
-
         logOption.timeCost = callDuration;
         logOption.trackInfo = toString();
+
         if (e != null) {
             logOption.exception = e;
         }
