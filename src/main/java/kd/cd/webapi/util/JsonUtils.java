@@ -1,5 +1,6 @@
 package kd.cd.webapi.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.SneakyThrows;
@@ -8,7 +9,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.jetbrains.annotations.NotNull;
-import shaded.com.alibaba.fastjson.JSON;
 
 import java.io.File;
 import java.io.InputStream;
@@ -28,7 +28,7 @@ public final class JsonUtils {
 
     public static String format(String str) {
         try {
-            return isValidJSON(str) ? executeFormat(str) : str;
+            return isValidJSON(str) ? formating(str) : str;
         } catch (Exception e) {
             return str;
         }
@@ -37,7 +37,7 @@ public final class JsonUtils {
     public static String fuzzyFormat(String str) {
         try {
             if (isValidJSON(str)) {
-                return executeFormat(str);
+                return formating(str);
             }
             if (str.contains("{") && str.contains("}")) {
                 int startIndex = str.indexOf("{");
@@ -51,7 +51,7 @@ public final class JsonUtils {
         }
     }
 
-    private static String executeFormat(String str) {
+    private static String formating(String str) {
         StringBuilder sb = new StringBuilder();
         int length = str.length();
         int number = 0;
@@ -94,7 +94,12 @@ public final class JsonUtils {
     }
 
     public static boolean isValidJSON(String str) {
-        return JSON.isValid(str) || JSON.isValidArray(str);
+        try {
+            JSON.parse(str);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     @SneakyThrows

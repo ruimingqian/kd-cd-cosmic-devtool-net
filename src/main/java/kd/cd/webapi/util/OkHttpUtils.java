@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -97,31 +96,7 @@ public final class OkHttpUtils {
         }
     }
 
-    public static JSONObject fullReqToJson(Request req, boolean includeBody) {
-        return Optional.ofNullable(req).map(r -> {
-                    JSONObject json = new JSONObject();
-                    json.put("url", r.url().toString());
-                    json.put("method", r.method());
-                    json.put("headers", r.headers().toString());
-                    json.put("body", includeBody ? getBufferedReqBodyString(req) : null);
-                    return json;
-                }
-        ).orElse(null);
-    }
-
-    public static JSONObject fullRespToJson(Response resp, boolean includeBody) {
-        return Optional.ofNullable(resp).map(r -> {
-                    JSONObject json = new JSONObject();
-                    json.put("success", resp.isSuccessful());
-                    json.put("headers", resp.headers().toString());
-                    json.put("message", resp.message());
-                    json.put("body", includeBody ? getBufferedRespBodyString(resp) : null);
-                    return json;
-                }
-        ).orElse(null);
-    }
-
-    private static String getBufferedReqBodyString(Request req) {
+    public static String getBufferedReqBody(Request req) {
         try (Buffer buffer = new Buffer()) {
             RequestBody body = req.body();
             if (body != null) {
@@ -137,7 +112,7 @@ public final class OkHttpUtils {
         return null;
     }
 
-    private static String getBufferedRespBodyString(Response resp) {
+    public static String getBufferedRespBody(Response resp) {
         try (Buffer buffer = getRespBuffer(resp)) {
             return buffer.clone().readUtf8();
 

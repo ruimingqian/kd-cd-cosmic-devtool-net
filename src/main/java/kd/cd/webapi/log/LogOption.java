@@ -1,8 +1,12 @@
 package kd.cd.webapi.log;
 
-import com.alibaba.fastjson.JSONObject;
 import kd.bos.context.RequestContext;
+import kd.cd.webapi.okhttp.BufferedRequest;
+import kd.cd.webapi.okhttp.BufferedResponse;
+import lombok.Getter;
 import lombok.Setter;
+
+import java.util.function.Consumer;
 
 /**
  * <b>自定义第三方日志参数</b>
@@ -18,6 +22,12 @@ import lombok.Setter;
  * @since cosmic 5.0
  */
 public class LogOption implements Cloneable {
+
+    /**
+     * 对日志结果最终干预
+     */
+    @Setter
+    protected Consumer<LogOption> finalAdjustment;
 
     /**
      * 是否开启新线程保存入库
@@ -105,12 +115,26 @@ public class LogOption implements Cloneable {
     /**
      * 请求信息
      */
-    protected JSONObject reqInfo;
+    @Getter
+    protected BufferedRequest bufferedReq = BufferedRequest.NONE;
 
     /**
      * 响应信息
      */
-    protected JSONObject respInfo;
+    @Getter
+    protected BufferedResponse bufferedResp = BufferedResponse.NONE;
+
+    /**
+     * 请求信息（副）
+     */
+    @Setter
+    protected String requestExt;
+
+    /**
+     * 响应信息（副）
+     */
+    @Setter
+    protected String responseExt;
 
     /**
      * RequestContext

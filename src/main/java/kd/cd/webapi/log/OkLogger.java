@@ -1,6 +1,5 @@
 package kd.cd.webapi.log;
 
-import com.alibaba.fastjson.JSONObject;
 import kd.bos.context.RequestContext;
 import kd.bos.dataentity.entity.DynamicObject;
 import kd.bos.db.tx.TX;
@@ -11,6 +10,8 @@ import kd.bos.logging.Log;
 import kd.bos.logging.LogFactory;
 import kd.bos.logorm.LogORM;
 import kd.bos.threads.ThreadPools;
+import kd.cd.webapi.okhttp.BufferedRequest;
+import kd.cd.webapi.okhttp.BufferedResponse;
 import kd.cd.webapi.util.ExceptionUtils;
 import kd.cd.webapi.util.JsonUtils;
 import kd.cd.webapi.util.SystemPropertyUtils;
@@ -19,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 public class OkLogger {
@@ -72,45 +72,35 @@ public class OkLogger {
     }
 
     private static void save(RequestContext rc, LogOption logOption) {
-        JSONObject reqObj = logOption.reqInfo;
+        BufferedRequest bfReq = logOption.bufferedReq;
+        String url = bfReq.getUrl();
+        String method = bfReq.getMethod();
+        String header = StringUtils.chomp(bfReq.getHeaders());
+        String reqString = logOption.enableFormat ? JsonUtils.fuzzyFormat(bfReq.getBody()) : bfReq.getBody();
 
-        String url = Optional.ofNullable(reqObj)
-                .map(r -> r.getString("url"))
-                .orElse("");
-
-        String method = Optional.ofNullable(reqObj)
-                .map(r -> r.getString("method"))
-                .orElse("");
-
-        String header = Optional.ofNullable(reqObj)
-                .map(r -> StringUtils.chomp(r.getString("headers")))
-                .orElse("");
-
-        boolean format = logOption.enableFormat;
-        String reqString = Optional.ofNullable(reqObj)
-                .map(r -> format ? JsonUtils.fuzzyFormat(r.getString("body")) : r.getString("body"))
-                .orElse("");
-
-        JSONObject respObj = logOption.respInfo;
-
-        String respString = Optional.ofNullable(respObj)
-                .map(r -> format ? JsonUtils.fuzzyFormat(r.getString("body")) : r.getString("body"))
-                .orElse("");
+        BufferedResponse bfResp = logOption.bufferedResp;
+        String respString = logOption.enableFormat ? JsonUtils.fuzzyFormat(bfResp.getBody()) : bfResp.getBody();
         Integer limitSize = logOption.respLimitSize;
         if (limitSize != null && limitSize > 0 && limitSize < respString.length()) {
             respString = respString.substring(0, limitSize);
         }
 
-        String status;
+        String status = String.valueOf(bfResp.isSuccess());
         String errMsg = "";
-        if (respObj == null) {
-            status = String.valueOf(false);
-            errMsg = formatExceptionText(logOption.exception);
-        } else if (Boolean.TRUE.equals(respObj.getBoolean("success"))) {
-            status = String.valueOf(true);
-        } else {
-            status = String.valueOf(false);
-            errMsg = respObj.getString("message");
+        if (!bfResp.isSuccess()) {
+            if (logOption.exception == null) {
+                errMsg = formatExceptionText(logOption.exception);
+            } else {
+                errMsg = bfResp.getMessage();
+            }
+        }
+
+        if (logOption.finalAdjustment != null) {
+            try {
+                logOption.finalAdjustment.accept(logOption);
+            } catch (Exception ignored) {
+                // ignore
+            }
         }
 
         MainEntityType entityType = EntityMetadataCache.getDataEntityType(LOG_FORM);
