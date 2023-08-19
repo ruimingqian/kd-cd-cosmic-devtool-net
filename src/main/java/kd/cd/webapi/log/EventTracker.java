@@ -31,9 +31,9 @@ public class EventTracker {
 
         if (logOption.enableNewThread) {
             logOption.requestContext = RequestContext.get();
-            OkLogger.require().logAsync(logOption);
+            LogWriter.require().logAsync(logOption);
         } else {
-            OkLogger.require().log(logOption);
+            LogWriter.require().log(logOption);
         }
     }
 

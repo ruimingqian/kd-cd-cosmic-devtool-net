@@ -22,28 +22,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-public class OkLogger {
+public class LogWriter {
     private static final String LOG_FORM = SystemPropertyUtils.getString("outapilog.formid.log", "outapilog");
     private static final int THREAD_NUM = SystemPropertyUtils.getInt("outapilog.logwriter.threads", 10, 2, 30);
-    private static final Log log = LogFactory.getLog(OkLogger.class);
+    private static final Log log = LogFactory.getLog(LogWriter.class);
     private static final ExecutorService exectorService = ThreadPools.newExecutorService("outapi-logger", THREAD_NUM);
-    private static volatile OkLogger okLogger;
+    private static volatile LogWriter logWriter;
 
-    private OkLogger() {
-        if (okLogger != null) {
+    private LogWriter() {
+        if (logWriter != null) {
             throw new IllegalStateException("No reflection allowed here");
         }
     }
 
-    public static OkLogger require() {
-        if (okLogger == null) {
-            synchronized (OkLogger.class) {
-                if (okLogger == null) {
-                    okLogger = new OkLogger();
+    public static LogWriter require() {
+        if (logWriter == null) {
+            synchronized (LogWriter.class) {
+                if (logWriter == null) {
+                    logWriter = new LogWriter();
                 }
             }
         }
-        return okLogger;
+        return logWriter;
     }
 
     public void logAsync(LogOption logOption) {
