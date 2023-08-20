@@ -31,9 +31,9 @@ public class EventTracker {
 
         if (logOption.enableNewThread) {
             logOption.requestContext = RequestContext.get();
-            LogWriter.require().logAsync(logOption);
+            LogWriter.require().writeAsync(logOption);
         } else {
-            LogWriter.require().log(logOption);
+            LogWriter.require().write(logOption);
         }
     }
 

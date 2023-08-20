@@ -22,7 +22,6 @@ import java.util.function.Consumer;
  * @since cosmic 5.0
  */
 public class LogOption implements Cloneable {
-
     /**
      * 对日志结果最终干预
      */

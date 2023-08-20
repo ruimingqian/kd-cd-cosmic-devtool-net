@@ -46,17 +46,17 @@ public class LogWriter {
         return logWriter;
     }
 
-    public void logAsync(LogOption logOption) {
-        exectorService.execute(() -> logging(logOption));
+    public void writeAsync(LogOption logOption) {
+        exectorService.execute(() -> save(logOption));
     }
 
-    public void log(LogOption logOption) {
+    public void write(LogOption logOption) {
         try (TXHandle ignored = TX.notSupported()) {
-            logging(logOption);
+            save(logOption);
         }
     }
 
-    private static void logging(LogOption logOption) {
+    private static void save(LogOption logOption) {
         try {
             RequestContext rc = logOption.requestContext;
             if (rc == null) {
