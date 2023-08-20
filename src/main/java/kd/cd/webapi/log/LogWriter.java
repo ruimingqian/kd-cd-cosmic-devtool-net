@@ -73,17 +73,12 @@ public class LogWriter {
 
     private static void save(RequestContext rc, LogOption logOption) {
         BufferedRequest bfReq = logOption.bufferedReq;
-        String url = bfReq.getUrl();
-        String method = bfReq.getMethod();
-        String header = StringUtils.chomp(bfReq.getHeaders());
         String reqString = logOption.enableFormat ? JsonUtils.fuzzyFormat(bfReq.getBody()) : bfReq.getBody();
+        reqString = chop(reqString, logOption.chopSize);
 
         BufferedResponse bfResp = logOption.bufferedResp;
         String respString = logOption.enableFormat ? JsonUtils.fuzzyFormat(bfResp.getBody()) : bfResp.getBody();
-        Integer limitSize = logOption.respLimitSize;
-        if (limitSize != null && limitSize > 0 && limitSize < respString.length()) {
-            respString = respString.substring(0, limitSize);
-        }
+        respString = chop(respString, logOption.chopSize);
 
         String status = String.valueOf(bfResp.isSuccess());
         String errMsg = "";
@@ -105,9 +100,9 @@ public class LogWriter {
 
         MainEntityType entityType = EntityMetadataCache.getDataEntityType(LOG_FORM);
         DynamicObject o = new DynamicObject(entityType);
-        o.set("opdesc", url);
-        o.set("reqmethod", method);
-        o.set("reheader_tag", header);
+        o.set("opdesc", bfReq.getUrl());
+        o.set("reqmethod", bfReq.getMethod());
+        o.set("reheader_tag", StringUtils.chomp(bfReq.getHeaders()));
         o.set("request_tag", reqString);
         o.set("response_tag", respString);
         o.set("errmsg_tag", errMsg);
@@ -134,6 +129,13 @@ public class LogWriter {
         List<DynamicObject> list = new ArrayList<>(1);
         list.add(o);
         LogORM.create().insert(list);
+    }
+
+    private static String chop(String content, Integer chopSize) {
+        if (chopSize != null && chopSize > 0 && chopSize < content.length()) {
+            return content.substring(0, chopSize);
+        }
+        return content;
     }
 
     private static String formatExceptionText(Throwable t) {

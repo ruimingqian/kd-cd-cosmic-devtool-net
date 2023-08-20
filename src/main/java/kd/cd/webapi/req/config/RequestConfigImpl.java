@@ -49,7 +49,7 @@ public class RequestConfigImpl implements RequestConfig {
 
             Integer respLimit = chompSize();
             if (respLimit != null && respLimit > 0) {
-                logOption.setRespLimitSize(respLimit);
+                logOption.setChopSize(respLimit);
             }
             return logOption.clone();
         } else {

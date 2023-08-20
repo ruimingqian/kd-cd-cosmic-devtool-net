@@ -53,10 +53,10 @@ public class LogOption implements Cloneable {
     protected boolean enableFormat;
 
     /**
-     * 响应截取长度
+     * 报文截取长度
      */
     @Setter
-    protected Integer respLimitSize;
+    protected Integer chopSize;
 
     /**
      * 表单标识
