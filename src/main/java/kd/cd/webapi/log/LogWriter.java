@@ -80,10 +80,9 @@ public class LogWriter {
         String respString = logOption.enableFormat ? JsonUtils.fuzzyFormat(bfResp.getBody()) : bfResp.getBody();
         respString = chop(respString, logOption.chopSize);
 
-        String status = String.valueOf(bfResp.isSuccess());
         String errMsg = "";
         if (!bfResp.isSuccess()) {
-            if (logOption.exception == null) {
+            if (logOption.exception != null) {
                 errMsg = formatExceptionText(logOption.exception);
             } else {
                 errMsg = bfResp.getMessage();
@@ -106,7 +105,7 @@ public class LogWriter {
         o.set("request_tag", reqString);
         o.set("response_tag", respString);
         o.set("errmsg_tag", errMsg);
-        o.set("status", status);
+        o.set("status", String.valueOf(bfResp.isSuccess()));
         o.set("times", logOption.timeCost);
         o.set("times_tag", logOption.trackInfo);
         o.set("bizobject", logOption.bizobject);
