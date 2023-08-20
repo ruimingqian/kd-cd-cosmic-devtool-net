@@ -104,6 +104,9 @@ public class LogWriter {
         o.set("reheader_tag", StringUtils.chomp(bfReq.getHeaders()));
         o.set("request_tag", reqString);
         o.set("response_tag", respString);
+        o.set("requestext_tag", logOption.requestExt);
+        o.set("responseext_tag", logOption.responseExt);
+        o.set("code", bfResp.getCode());
         o.set("errmsg_tag", errMsg);
         o.set("status", String.valueOf(bfResp.isSuccess()));
         o.set("times", logOption.timeCost);

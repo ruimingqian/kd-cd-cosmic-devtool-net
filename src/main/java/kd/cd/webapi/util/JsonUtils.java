@@ -42,7 +42,9 @@ public final class JsonUtils {
             if (str.contains("{") && str.contains("}")) {
                 int startIndex = str.indexOf("{");
                 int endIndex = str.lastIndexOf("}");
-                return str.substring(0, startIndex) + format(str.substring(startIndex, endIndex + 1)) + str.substring(endIndex + 1);
+                return str.substring(0, startIndex) + "\n"
+                        + format(str.substring(startIndex, endIndex + 1)) + "\n"
+                        + str.substring(endIndex + 1);
             } else {
                 return str;
             }
