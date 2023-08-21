@@ -1,7 +1,6 @@
 package kd.cd.webapi.okhttp;
 
 import com.alibaba.fastjson.JSONObject;
-import kd.cd.webapi.exception.IllegalResponseException;
 import okhttp3.Response;
 import org.apache.commons.io.IOUtils;
 
@@ -22,24 +21,24 @@ public class RespHandler implements RespHandle<Response> {
         return resp;
     }
 
-    public JSONObject bodyToJson() throws IOException, IllegalResponseException {
+    public JSONObject bodyToJson() throws IOException {
         return respBodyToJson(resp);
     }
 
-    public byte[] bodyToBytes() throws IOException, IllegalResponseException {
+    public byte[] bodyToBytes() throws IOException {
         return respBodyToBytes(resp);
     }
 
-    public void writeTo(OutputStream outputStream) throws IOException, IllegalResponseException {
+    public void writeTo(OutputStream outputStream) throws IOException {
         InputStream inputStream = bodyToInputStream();
         IOUtils.copy(inputStream, outputStream);
     }
 
-    public InputStream bodyToInputStream() throws IllegalResponseException {
+    public InputStream bodyToInputStream() {
         return respBodyToInputStream(resp);
     }
 
-    public String bodyToString() throws IOException, IllegalResponseException {
+    public String bodyToString() throws IOException {
         return respBodyToString(resp);
     }
 

@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import kd.bos.logging.Log;
 import kd.bos.logging.LogFactory;
 import kd.cd.webapi.exception.FailedResponseException;
-import kd.cd.webapi.exception.IllegalResponseException;
 import kd.cd.webapi.exception.NullResponseException;
 import kd.cd.webapi.log.DruationListenerFactory;
 import kd.cd.webapi.log.RespInterceptor;
@@ -62,37 +61,37 @@ public final class OkHttpUtils {
         return builder;
     }
 
-    public static JSONObject respBodyToJson(Response resp) throws IOException, IllegalResponseException {
+    public static JSONObject respBodyToJson(Response resp) throws IOException {
         String bodyString = respBodyToString(resp);
         return StringUtils.isEmpty(bodyString) ?
                 null :
                 JSON.parseObject(bodyString);
     }
 
-    public static String respBodyToString(Response resp) throws IOException, IllegalResponseException {
+    public static String respBodyToString(Response resp) throws IOException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.string();
     }
 
-    public static byte[] respBodyToBytes(Response resp) throws IOException, IllegalResponseException {
+    public static byte[] respBodyToBytes(Response resp) throws IOException {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.bytes();
     }
 
-    public static InputStream respBodyToInputStream(Response resp) throws IllegalResponseException {
+    public static InputStream respBodyToInputStream(Response resp) {
         checkResp(resp);
         ResponseBody body = resp.body();
         return body == null ? null : body.byteStream();
     }
 
-    public static void checkResp(Response resp) throws IllegalResponseException {
+    public static void checkResp(Response resp) {
         if (resp == null) {
             throw new NullResponseException();
         }
         if (!resp.isSuccessful()) {
-            throw new FailedResponseException(resp);
+            throw new FailedResponseException(resp.toString());
         }
     }
 
