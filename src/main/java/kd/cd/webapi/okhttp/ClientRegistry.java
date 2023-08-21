@@ -16,7 +16,7 @@ public class ClientRegistry {
 
     public static OkHttpClient getOrRegisterAsDefault(String clientName) {
         return getOrRegister(clientName, () ->
-                OkHttpUtils.newCustomizedBuilder().build());
+                OkHttpUtils.newDefaultCustomizedBuilder().build());
     }
 
     public static OkHttpClient getOrRegister(String clientName, Supplier<OkHttpClient> clientSupplier) {

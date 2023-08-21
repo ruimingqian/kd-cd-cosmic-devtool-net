@@ -38,7 +38,7 @@ public final class OkHttpUtils {
     private OkHttpUtils() {
     }
 
-    public static OkHttpClient.Builder newCustomizedBuilder() {
+    public static OkHttpClient.Builder newDefaultCustomizedBuilder() {
         return newBuilder(IGNORE_SSL_CHECK, ADD_LOG_MONITOR);
     }
 
