@@ -1,26 +1,16 @@
 package kd.cd.webapi.exception;
 
-/**
- * 响应失败异常
- *
- * @author qrm
- * @version 1.0
- * @see RuntimeException
- */
+import lombok.Getter;
+import okhttp3.Response;
+
+@Getter
 public class FailedResponseException extends IllegalResponseException {
-    public FailedResponseException() {
-        super();
-    }
+    protected final long httpCode;
+    protected final String respMsg;
 
-    public FailedResponseException(String message) {
-        super(message);
-    }
-
-    public FailedResponseException(Throwable cause) {
-        super(cause);
-    }
-
-    public FailedResponseException(String message, Throwable cause) {
-        super(message, cause);
+    public FailedResponseException(Response resp) {
+        super(resp.toString());
+        this.httpCode = resp.code();
+        this.respMsg = resp.message();
     }
 }

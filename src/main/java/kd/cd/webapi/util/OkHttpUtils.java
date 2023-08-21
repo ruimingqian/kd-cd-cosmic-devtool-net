@@ -89,10 +89,10 @@ public final class OkHttpUtils {
 
     public static void checkResp(Response resp) throws IllegalResponseException {
         if (resp == null) {
-            throw new NullResponseException("Okhttp response is null");
+            throw new NullResponseException();
         }
         if (!resp.isSuccessful()) {
-            throw new FailedResponseException(String.format("Okhttp request fail: %s", resp.message()));
+            throw new FailedResponseException(resp);
         }
     }
 
