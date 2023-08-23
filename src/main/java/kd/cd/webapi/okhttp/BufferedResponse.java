@@ -7,7 +7,7 @@ import okhttp3.Response;
 @Getter
 public class BufferedResponse {
     public static final BufferedResponse NONE = new BufferedResponse();
-    private int code;
+    private Integer code;
     private String message;
     private String header;
     private boolean success;
