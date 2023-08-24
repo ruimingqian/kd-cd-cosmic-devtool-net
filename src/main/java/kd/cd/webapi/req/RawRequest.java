@@ -15,7 +15,7 @@ public class RawRequest extends RequestBase {
         this.method = builder.method;
         this.contentType = builder.contentType;
         this.reqString = builder.reqString;
-        this.headerMap = builder.headerMap;
+        this.headers = builder.headers;
         this.logOption = builder.logOption;
     }
 
@@ -28,7 +28,7 @@ public class RawRequest extends RequestBase {
         private Method method = Method.GET;
         private ContentType contentType = ContentType.APPLICATION_JSON;
         private String reqString = "";
-        private Map<String, String> headerMap;
+        private Map<String, String> headers;
         private LogOption logOption;
 
         public Builder url(String url) {
@@ -47,10 +47,10 @@ public class RawRequest extends RequestBase {
         }
 
         public Builder addHeader(String key, String value) {
-            if (this.headerMap == null) {
-                this.headerMap = new HashMap<>(4);
+            if (this.headers == null) {
+                this.headers = new HashMap<>(4);
             }
-            this.headerMap.put(key, value);
+            this.headers.put(key, value);
             return this;
         }
 

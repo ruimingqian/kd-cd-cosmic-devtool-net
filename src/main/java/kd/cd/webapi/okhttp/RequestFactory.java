@@ -77,7 +77,7 @@ public final class RequestFactory {
     private static Request generate(RequestBody reqBody, ContentType contentType, RequestBase base) {
         Method method = base.getMethod();
         String url = base.getUrl();
-        Map<String, String> headerMap = base.getHeaderMap();
+        Map<String, String> headerMap = base.getHeaders();
         LogOption logOption = base.getLogOption();
 
         Request.Builder reqBuilder = new Request.Builder()

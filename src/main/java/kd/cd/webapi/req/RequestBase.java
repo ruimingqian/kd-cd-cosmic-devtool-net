@@ -10,6 +10,6 @@ public class RequestBase {
     protected String url;
     protected Method method;
     protected ContentType contentType;
-    protected Map<String, String> headerMap;
+    protected Map<String, String> headers;
     protected LogOption logOption;
 }
