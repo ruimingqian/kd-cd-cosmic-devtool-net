@@ -1,35 +1,34 @@
 package kd.cd.webapi.okhttp;
 
-import kd.cd.webapi.log.LogOption;
-import kd.cd.webapi.req.ContentType;
-import kd.cd.webapi.req.Method;
+import kd.cd.webapi.req.FormDataRequest;
+import kd.cd.webapi.req.RawRequest;
+import kd.cd.webapi.req.UrlencodeRequest;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.function.Function;
 
 public abstract class AbstractSyncSender<T> implements SyncSend<T> {
     protected OkHttpClient client;
 
     @Override
-    public T sendRawText(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        Request req = RequestFactory.newRawRequest(method, contentType, url, reqString, headerMap, logOption);
+    public T sendRaw(RawRequest rawRequest) throws IOException {
+        Request req = RequestFactory.newRawRequest(rawRequest);
         return execSync(req, respHandelFunction());
     }
 
     @Override
-    public T sendUrlencoded(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        Request req = RequestFactory.newUrlencodedRequest(method, url, reqMap, headerMap, logOption);
+    public T sendUrlencoded(UrlencodeRequest urlencodeRequest) throws IOException {
+        Request req = RequestFactory.newUrlencodedRequest(urlencodeRequest);
         return execSync(req, respHandelFunction());
     }
 
     @Override
-    public T sendFormData(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
-        Request req = RequestFactory.newFormDataRequest(method, url, reqMap, headerMap, logOption);
+    public T sendFormData(FormDataRequest formDataRequest) throws IOException {
+        Request req = RequestFactory.newFormDataRequest(formDataRequest);
         return execSync(req, respHandelFunction());
     }
 

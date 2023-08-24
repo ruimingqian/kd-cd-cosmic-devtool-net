@@ -23,9 +23,21 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * <b>示例</b>
  * <pre> {@code
- *    String str = SyncSingletonSender.require()
- *                  .urlencodedPost(url, reqMap, null, logOption)
- *                  .bodyToString()
+ *         RawRequest rawRequest = RawRequest.builder()
+ *                 .method(Method.POST)
+ *                 .contentType(ContentType.APPLICATION_JSON)
+ *                 .url("http://localhost...")
+ *                 .reqString(reqString)
+ *                 .logOption(cfg.logOption())
+ *                 .build();
+ *
+ *         try {
+ *             String s = SyncSingletonSender.require()
+ *                     .sendRaw(rawRequest)
+ *                     .bodyToString();
+ *         } catch (IOException e) {
+ *             throw new RuntimeException(e);
+ *         }
  * }</pre>
  *
  * @author qrm

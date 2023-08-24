@@ -2,18 +2,15 @@ package kd.cd.webapi.okhttp;
 
 import kd.cd.webapi.log.EventTracker;
 import kd.cd.webapi.log.LogOption;
-import kd.cd.webapi.req.ContentType;
-import kd.cd.webapi.req.Method;
+import kd.cd.webapi.req.*;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
@@ -35,12 +32,17 @@ public final class RequestFactory {
     private RequestFactory() {
     }
 
-    public static Request newRawRequest(Method method, ContentType contentType, String url, String reqString, Map<String, String> headerMap, LogOption logOption) {
+    public static Request newRawRequest(RawRequest rawReq) {
+        String reqString = rawReq.getReqString();
+        ContentType contentType = rawReq.getContentType();
+
         RequestBody body = RequestBody.create(reqString, MediaType.parse(contentType.getName()));
-        return generate(method, contentType, url, body, headerMap, logOption);
+        return generate(body, contentType, rawReq);
     }
 
-    public static Request newUrlencodedRequest(Method method, String url, @NotNull Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) throws IOException {
+    public static Request newUrlencodedRequest(UrlencodeRequest urlencodeRequest) throws IOException {
+        Map<String, String> reqMap = urlencodeRequest.getReqMap();
+
         List<BasicNameValuePair> list = new ArrayList<>(reqMap.size());
         reqMap.forEach((key, value) -> list.add(new BasicNameValuePair(key, value)));
 
@@ -53,34 +55,31 @@ public final class RequestFactory {
             String content = URLDecoder.decode(line, StandardCharsets.UTF_8.name());
 
             RequestBody body = RequestBody.create(content, MediaType.parse(ContentType.APPLICATION_URLENCODED.getName()));
-            return generate(method, ContentType.APPLICATION_URLENCODED, url, body, headerMap, logOption);
+            return generate(body, ContentType.APPLICATION_URLENCODED, urlencodeRequest);
         }
     }
 
-    public static Request newFormDataRequest(Method method, String url, Map<String, String> reqMap, Map<String, String> headerMap, LogOption logOption) {
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+    public static Request newFormDataRequest(FormDataRequest formDataRequest) {
+        Map<String, String> reqMap = formDataRequest.getReqMap();
+
+        MultipartBody.Builder builder = new MultipartBody
+                .Builder()
+                .setType(MultipartBody.FORM);
 
         for (Map.Entry<String, String> entry : reqMap.entrySet()) {
             builder.addFormDataPart(entry.getKey(), entry.getValue());
         }
         MultipartBody multipartBody = builder.build();
-        return generate(method, ContentType.TEXT_PLAIN, url, multipartBody, headerMap, logOption);
+
+        return generate(multipartBody, ContentType.TEXT_PLAIN, formDataRequest);
     }
 
-    public static Request newUploadFileRequest(Method method, String url, Map<String, File> fileMap, Map<String, String> headerMap, LogOption logOption) {
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+    private static Request generate(RequestBody reqBody, ContentType contentType, RequestBase base) {
+        Method method = base.getMethod();
+        String url = base.getUrl();
+        Map<String, String> headerMap = base.getHeaderMap();
+        LogOption logOption = base.getLogOption();
 
-        for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-            File file = entry.getValue();
-            RequestBody requestBody = RequestBody.create(file, MediaType.parse(ContentType.MUTIPART_FORMDATA.getName()));
-            builder.addFormDataPart(entry.getKey(), file.getName(), requestBody);
-        }
-        MultipartBody multipartBody = builder.build();
-        logOption.setRecordFullRequest(false);
-        return generate(method, null, url, multipartBody, headerMap, logOption);
-    }
-
-    private static Request generate(Method method, ContentType contentType, String url, RequestBody reqBody, Map<String, String> headerMap, LogOption logOption) {
         Request.Builder reqBuilder = new Request.Builder()
                 .url(url)
                 .method(method.getName(), reqBody);
