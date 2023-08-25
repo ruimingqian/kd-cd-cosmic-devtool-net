@@ -1,8 +1,6 @@
 package kd.cd.webapi.log;
 
 import kd.bos.context.RequestContext;
-import kd.cd.webapi.okhttp.BufferedRequest;
-import kd.cd.webapi.okhttp.BufferedResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -61,7 +59,8 @@ public class LogOption implements Cloneable {
     /**
      * 表单标识
      */
-    protected String bizobject;
+    @Setter
+    protected String bizFormId;
 
     /**
      * 操作类型
@@ -141,7 +140,7 @@ public class LogOption implements Cloneable {
     protected RequestContext requestContext;
 
     public LogOption(String entityId, String apiNumber, String apiName) {
-        this.bizobject = entityId;
+        this.bizFormId = entityId;
         this.opname = apiNumber;
         this.thirdappname = apiName;
     }

@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class ClientRegistry {
-    private static final Map<String, OkHttpClient> clientPoolMap = new ConcurrentHashMap<>(8);
+    private static final Map<String, OkHttpClient> clientPoolMap = new ConcurrentHashMap<>(16);
 
     private ClientRegistry() {
     }

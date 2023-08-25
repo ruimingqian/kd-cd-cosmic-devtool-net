@@ -1,4 +1,4 @@
-package kd.cd.webapi.req.config;
+package kd.cd.webapi.config;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,4 +1,4 @@
-package kd.cd.webapi.req.config;
+package kd.cd.webapi.config;
 
 import kd.cd.webapi.log.LogOption;
 
@@ -9,8 +9,6 @@ public interface RequestConfig {
 
     LogOption logOption();
 
-    LogOption logOption(String bizFormId);
-
     Integer chompSize();
 
     String getCustomParam(String key);
@@ -19,7 +17,7 @@ public interface RequestConfig {
 
     String reqTemplateText();
 
-    Object getProperty(String property);
+    Object getProperty(String property, Object def);
 
     boolean isEnableFormat();
 

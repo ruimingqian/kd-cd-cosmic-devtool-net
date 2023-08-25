@@ -10,8 +10,6 @@ import kd.bos.logging.Log;
 import kd.bos.logging.LogFactory;
 import kd.bos.logorm.LogORM;
 import kd.bos.threads.ThreadPools;
-import kd.cd.webapi.okhttp.BufferedRequest;
-import kd.cd.webapi.okhttp.BufferedResponse;
 import kd.cd.webapi.util.ExceptionUtils;
 import kd.cd.webapi.util.JsonUtils;
 import kd.cd.webapi.util.SystemPropertyUtils;
@@ -111,7 +109,7 @@ public class LogWriter {
         o.set("status", String.valueOf(bfResp.isSuccess()));
         o.set("times", logOption.timeCost);
         o.set("times_tag", logOption.trackInfo);
-        o.set("bizobject", logOption.bizobject);
+        o.set("bizobject", logOption.bizFormId);
         o.set("opname", logOption.opname);
         o.set("cloudname", logOption.cloudname);
         o.set("appname", logOption.appname);

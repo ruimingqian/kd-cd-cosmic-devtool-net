@@ -1,4 +1,4 @@
-package kd.cd.webapi.okhttp;
+package kd.cd.webapi.log;
 
 import kd.cd.webapi.util.OkHttpUtils;
 import lombok.Getter;

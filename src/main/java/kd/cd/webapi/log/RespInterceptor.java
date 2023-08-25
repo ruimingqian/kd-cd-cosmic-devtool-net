@@ -1,7 +1,5 @@
 package kd.cd.webapi.log;
 
-import kd.cd.webapi.okhttp.BufferedRequest;
-import kd.cd.webapi.okhttp.BufferedResponse;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;

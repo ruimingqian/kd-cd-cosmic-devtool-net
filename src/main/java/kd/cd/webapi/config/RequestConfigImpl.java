@@ -1,4 +1,4 @@
-package kd.cd.webapi.req.config;
+package kd.cd.webapi.config;
 
 import kd.bos.cache.CacheConfigInfo;
 import kd.bos.cache.CacheFactory;
@@ -29,22 +29,23 @@ public class RequestConfigImpl implements RequestConfig {
     RequestConfigImpl(String configNum) {
         this.configNum = configNum;
         if (StringUtils.isBlank(configNum)) {
-            throw new IllegalArgumentException("Empty 3rdapi config number");
+            throw new IllegalArgumentException("Empty config number");
+        }
+        if (loadObj() == null) {
+            throw new KDBizException(String.format("获取接口配置信息失败！编码为'%s'的第三方接口信息未配置或已被禁用", configNum));
         }
     }
 
     @Override
     public LogOption logOption() {
-        return logOption("");
-    }
-
-    @Override
-    public LogOption logOption(String bizFormId) {
         if (isEnableLogging()) {
-            LogOption logOption = (LogOption) getFromCache(bizFormId + "_" + configNum + "_logoption", k -> {
+            String bizFormId = (String) getProperty("bizform.number", "");
+
+            LogOption logOption = (LogOption) getFromCache(configNum + "_logoption", k -> {
                 DynamicObject o = loadObj();
                 return new LogOption(bizFormId, o.getString("number"), o.getString("name"));
             });
+
             logOption.setEnableFormat(isEnableFormat());
 
             Integer respLimit = chompSize();
@@ -52,6 +53,7 @@ public class RequestConfigImpl implements RequestConfig {
                 logOption.setChopSize(respLimit);
             }
             return logOption.clone();
+
         } else {
             return null;
         }
@@ -86,39 +88,31 @@ public class RequestConfigImpl implements RequestConfig {
 
     @Override
     public String reqTemplateText() {
-        return (String) getProperty("body_tag");
+        return (String) getProperty("body_tag", "");
     }
 
     @Override
     public Integer chompSize() {
-        try {
-            return (Integer) getProperty("resplimit");
-        } catch (Exception e) {
-            return null;
-        }
+        return (Integer) getProperty("resplimit", null);
     }
 
     @Override
     public boolean isEnableFormat() {
-        try {
-            return (Boolean) getProperty("formatlog");
-        } catch (Exception e) {
-            return false;
-        }
+        return (Boolean) getProperty("formatlog", false);
     }
 
     @Override
     public boolean isEnableLogging() {
-        try {
-            return (Boolean) getProperty("enablelog");
-        } catch (Exception e) {
-            return true;
-        }
+        return (Boolean) getProperty("enablelog", true);
     }
 
     @Override
-    public Object getProperty(String property) {
-        return loadObj().get(property);
+    public Object getProperty(String property, Object def) {
+        try {
+            return loadObj().get(property);
+        } catch (Exception e) {
+            return def;
+        }
     }
 
     private DynamicObject loadObj() {
@@ -128,11 +122,7 @@ public class RequestConfigImpl implements RequestConfig {
             filters.add(new QFilter("enable", QCP.equals, "1"));
             filters.add(new QFilter("number", QCP.equals, configNum));
 
-            DynamicObject single = BusinessDataServiceHelper.loadSingleFromCache(REQUEST_FORM, filters.toArray(new QFilter[0]));
-            if (single == null) {
-                throw new KDBizException(String.format("获取接口配置信息失败！编码为'%s'的第三方接口信息未配置或已被禁用", configNum));
-            }
-            return single;
+            return BusinessDataServiceHelper.loadSingleFromCache(REQUEST_FORM, filters.toArray(new QFilter[0]));
         });
     }
 

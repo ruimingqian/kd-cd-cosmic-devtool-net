@@ -1,4 +1,4 @@
-package kd.cd.webapi.req;
+package kd.cd.webapi.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -82,6 +82,7 @@ public class MappingConverter<V> implements MappingConvert<V> {
             }
         }
 
+        @Override
         public String toJsonString() {
             return jsonObject.toString();
         }
@@ -126,20 +127,24 @@ public class MappingConverter<V> implements MappingConvert<V> {
             }
         }
 
+        @Override
         public Map<String, V> toMap() {
             return this.map;
         }
 
+        @Override
         public MappingConvert<V> put(String key, V value) {
             this.map.put(key, value);
             return this;
         }
 
+        @Override
         public MappingConvert<V> replace(String key, V value) {
             this.map.replace(key, value);
             return this;
         }
 
+        @Override
         public MappingConvert<V> remove(String... keys) {
             Set<String> keySet = this.map.keySet();
             Arrays.asList(keys).forEach(keySet::remove);

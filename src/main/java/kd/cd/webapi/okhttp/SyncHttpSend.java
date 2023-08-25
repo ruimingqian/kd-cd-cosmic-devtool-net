@@ -6,7 +6,7 @@ import kd.cd.webapi.req.UrlencodeRequest;
 
 import java.io.IOException;
 
-public interface SyncSend<T> {
+public interface SyncHttpSend<T> {
     T sendFormData(FormDataRequest formDataRequest) throws IOException;
 
     T sendRaw(RawRequest rawRequest) throws IOException;
