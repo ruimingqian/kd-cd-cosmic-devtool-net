@@ -32,12 +32,12 @@ public final class RequestFactory {
     private RequestFactory() {
     }
 
-    public static Request newRawRequest(RawRequest rawReq) {
-        String reqString = rawReq.getReqString();
-        ContentType contentType = rawReq.getContentType();
+    public static Request newRawRequest(RawRequest rawRequest) {
+        String reqString = rawRequest.getReqString();
+        ContentType contentType = rawRequest.getContentType();
 
         RequestBody body = RequestBody.create(reqString, MediaType.parse(contentType.getName()));
-        return generate(body, contentType, rawReq);
+        return generate(body, contentType, rawRequest);
     }
 
     public static Request newUrlencodedRequest(UrlencodeRequest urlencodeRequest) throws IOException {
