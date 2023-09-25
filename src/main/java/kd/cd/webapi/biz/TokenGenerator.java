@@ -15,23 +15,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class TokenGenerator {
     private static final IAppCache cache = AppCache.get("TOKEN");
-    private static final Map<String, TokenGenerator> poolMap = new ConcurrentHashMap<>(64);
     private static final long INTERVAL_THRESHOLD = SystemPropertyUtils.getLong("accesstoken.cache.intervalthreshold", 60000L);
     private final String appId;
     private final String appSecuret;
+    private String domainUrl;
+    @Setter
+    private String accountId;
+    @Setter
+    private String tenantId;
 
-    private TokenGenerator(String appId, String appSecuret) {
+    public TokenGenerator(String appId, String appSecuret) {
         this.appId = appId;
         this.appSecuret = appSecuret;
-    }
-
-    public static TokenGenerator of(String appId, String appSecuret) {
-        return poolMap.computeIfAbsent(appId + appSecuret, k -> new TokenGenerator(appId, appSecuret));
     }
 
     public String cacheAccessToken(String phone) {
@@ -53,25 +50,12 @@ public class TokenGenerator {
         }
     }
 
-    public Token newAccessToken(String phone) {
-        String domainUrl = RequestContext.get().getClientFullContextPath();
-        return newAccessToken(domainUrl.substring(0, domainUrl.length() - 1), phone);
-    }
-
-    public Token newAccessToken(String domainUrl, String phone) {
-        RequestContext ctx = RequestContext.get();
-        String tenantId = ctx.getTenantId();
-        String accountId = ctx.getAccountId();
-        String appToken = newAppToken(domainUrl, tenantId, accountId).getTokenText();
-        return newAccessToken(domainUrl, phone, appToken, tenantId, accountId);
-    }
-
     @SneakyThrows
-    private static Token newAccessToken(String domainUrl, String phone, String apptoken, String tenantid, String accountId) {
+    public Token newAccessToken(String phone) {
         JSONObject json = new JSONObject(5);
         json.put("user", phone);
-        json.put("apptoken", apptoken);
-        json.put("tenantid", tenantid);
+        json.put("apptoken", newAppToken().getTokenText());
+        json.put("tenantid", tenantId);
         json.put("accountId", accountId);
         json.put("usertype", "Mobile");
         json.put("language", "zh_CN");
@@ -90,20 +74,13 @@ public class TokenGenerator {
         return new Token(resp, "access_token");
     }
 
-    public Token newAppToken() {
-        RequestContext ctx = RequestContext.get();
-        String tenantId = ctx.getTenantId();
-        String accountId = ctx.getAccountId();
-        String path = ctx.getClientFullContextPath();
-        return newAppToken(path.substring(0, path.length() - 1), tenantId, accountId);
-    }
-
     @SneakyThrows
-    public Token newAppToken(String domainUrl, String tenantid, String accountId) {
+    public Token newAppToken() {
+        init();
         JSONObject json = new JSONObject(5);
         json.put("appId", appId);
         json.put("appSecuret", appSecuret);
-        json.put("tenantid", tenantid);
+        json.put("tenantid", tenantId);
         json.put("accountId", accountId);
         json.put("language", "zh_CN");
 
@@ -119,6 +96,18 @@ public class TokenGenerator {
                 .bodyToJson();
 
         return new Token(resp, "app_token");
+    }
+
+    private void init() {
+        RequestContext ctx = RequestContext.get();
+        String path = ctx.getClientFullContextPath();
+        domainUrl = path.substring(0, path.length() - 1);
+        if (tenantId == null) {
+            tenantId = ctx.getTenantId();
+        }
+        if (accountId == null) {
+            accountId = ctx.getAccountId();
+        }
     }
 
     @Getter
