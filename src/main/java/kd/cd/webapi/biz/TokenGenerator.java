@@ -52,7 +52,7 @@ public class TokenGenerator {
 
     @SneakyThrows
     public Token newAccessToken(String phone) {
-        JSONObject json = new JSONObject(5);
+        JSONObject json = new JSONObject(6);
         json.put("user", phone);
         json.put("apptoken", newAppToken().getTokenText());
         json.put("tenantid", tenantId);
