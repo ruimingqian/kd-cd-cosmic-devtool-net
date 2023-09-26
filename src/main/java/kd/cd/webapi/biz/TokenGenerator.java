@@ -88,8 +88,10 @@ public class TokenGenerator {
 
     private void init() {
         RequestContext ctx = RequestContext.get();
-        String path = ctx.getClientFullContextPath();
-        domainUrl = path.substring(0, path.length() - 1);
+        if (domainUrl == null) {
+            String path = ctx.getClientFullContextPath();
+            domainUrl = path.substring(0, path.length() - 1);
+        }
         if (tenantId == null) {
             tenantId = ctx.getTenantId();
         }
