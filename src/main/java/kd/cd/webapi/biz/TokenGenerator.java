@@ -10,26 +10,17 @@ import kd.cd.webapi.req.ContentType;
 import kd.cd.webapi.req.Method;
 import kd.cd.webapi.req.RawRequest;
 import kd.cd.webapi.util.SystemPropertyUtils;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.SneakyThrows;
+import lombok.*;
 
+@Builder
 public class TokenGenerator {
     private static final IAppCache cache = AppCache.get("TOKEN");
     private static final long INTERVAL_THRESHOLD = SystemPropertyUtils.getLong("accesstoken.cache.intervalthreshold", 60000L);
     private final String appId;
     private final String appSecuret;
     private String domainUrl;
-    @Setter
     private String accountId;
-    @Setter
     private String tenantId;
-
-    public TokenGenerator(String appId, String appSecuret) {
-        this.appId = appId;
-        this.appSecuret = appSecuret;
-    }
 
     public String cacheAccessToken(String phone) {
         String key = this.appId + phone;
