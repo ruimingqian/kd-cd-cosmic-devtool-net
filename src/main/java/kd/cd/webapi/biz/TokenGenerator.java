@@ -106,7 +106,7 @@ public class TokenGenerator {
         private Long expireTime;
 
         public Token(JSONObject json, String type) {
-            if ("success".equals(json.getString("state"))) {
+            if ("success".equalsIgnoreCase(json.getString("state"))) {
                 JSONObject data = (JSONObject) json.get("data");
                 if ("0".equals(data.get("error_code"))) {
                     this.tokenText = data.getString(type);
