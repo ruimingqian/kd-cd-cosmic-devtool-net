@@ -32,22 +32,19 @@ public class TokenGenerator {
     }
 
     public String cacheAccessToken(String phone) {
-        String key = appId + phone;
+        String key = this.appId + phone;
         Token token = cache.get(key, Token.class);
-
-        if (token == null) {
-            Token newToken = newAccessToken(phone);
+        if (token == null || isMeetExpireThreshold(token.getExpireTime())) {
+            Token newToken = this.newAccessToken(phone);
             cache.put(key, newToken);
             return newToken.getTokenText();
         } else {
-            if (System.currentTimeMillis() > token.getExpireTime() + INTERVAL_THRESHOLD) {
-                Token newToken = newAccessToken(phone);
-                cache.put(key, newToken);
-                return newToken.getTokenText();
-            } else {
-                return token.getTokenText();
-            }
+            return token.getTokenText();
         }
+    }
+
+    private static boolean isMeetExpireThreshold(long expiredTime) {
+        return System.currentTimeMillis() > expiredTime + INTERVAL_THRESHOLD;
     }
 
     @SneakyThrows
