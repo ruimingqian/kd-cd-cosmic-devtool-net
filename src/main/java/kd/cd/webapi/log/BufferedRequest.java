@@ -19,7 +19,7 @@ public class BufferedRequest {
         url = request.url().toString();
         method = request.method();
         headers = request.headers().toString();
-        body = includeBody ? OkHttpUtils.getBufferedReqBody(request) : null;
+        body = includeBody ? OkHttpUtils.bufferReqBody(request) : null;
     }
 
     public static BufferedRequest create(Request request, boolean includeBody) {

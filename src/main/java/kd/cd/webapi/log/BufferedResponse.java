@@ -21,7 +21,7 @@ public class BufferedResponse {
         header = response.headers().toString();
         success = response.isSuccessful();
         message = response.message();
-        body = includeBody ? OkHttpUtils.getBufferedRespBody(response) : null;
+        body = includeBody ? OkHttpUtils.bufferRespBody(response) : null;
     }
 
     public static BufferedResponse create(Response response, boolean includeBody) {

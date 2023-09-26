@@ -95,7 +95,7 @@ public final class OkHttpUtils {
         }
     }
 
-    public static String getBufferedReqBody(Request req) {
+    public static String bufferReqBody(Request req) {
         try (Buffer buffer = new Buffer()) {
             RequestBody body = req.body();
             if (body != null) {
@@ -111,10 +111,9 @@ public final class OkHttpUtils {
         return null;
     }
 
-    public static String getBufferedRespBody(Response resp) {
-        try (Buffer buffer = getRespBuffer(resp)) {
+    public static String bufferRespBody(Response resp) {
+        try (Buffer buffer = newRespBuffer(resp)) {
             return buffer.clone().readUtf8();
-
         } catch (Exception e) {
             if (log.isWarnEnabled()) {
                 log.warn("Clone resp failed", e);
@@ -123,7 +122,7 @@ public final class OkHttpUtils {
         return null;
     }
 
-    private static Buffer getRespBuffer(Response resp) throws IOException {
+    private static Buffer newRespBuffer(Response resp) throws IOException {
         ResponseBody respBody = resp.body();
         BufferedSource source = Objects.requireNonNull(respBody).source();
         source.request(Long.MAX_VALUE);
