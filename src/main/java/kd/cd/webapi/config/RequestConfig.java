@@ -22,4 +22,6 @@ public interface RequestConfig {
     boolean isEnableFormat();
 
     boolean isEnableLogging();
+
+    boolean isRecordRespBody();
 }

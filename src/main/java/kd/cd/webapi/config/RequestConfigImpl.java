@@ -40,17 +40,16 @@ public class RequestConfigImpl implements RequestConfig {
     public LogOption logOption() {
         if (isEnableLogging()) {
             String bizFormId = (String) getProperty("bizform.number", "");
-
             LogOption logOption = (LogOption) getFromCache(configNum + "_logoption", k -> {
                 DynamicObject o = loadObj();
                 return new LogOption(bizFormId, o.getString("number"), o.getString("name"));
             });
-
             logOption.setEnableFormat(isEnableFormat());
-
-            Integer respLimit = chompSize();
-            if (respLimit != null && respLimit > 0) {
-                logOption.setChopSize(respLimit);
+            if (isRecordRespBody()) {
+                Integer chopSize = chompSize();
+                if (chopSize != null && chopSize > 0) {
+                    logOption.setChopSize(chopSize);
+                }
             }
             return logOption.clone();
 
@@ -107,6 +106,11 @@ public class RequestConfigImpl implements RequestConfig {
     }
 
     @Override
+    public boolean isRecordRespBody() {
+        return (Boolean) getProperty("recordrespbody", true);
+    }
+
+    @Override
     public Object getProperty(String property, Object def) {
         try {
             return loadObj().get(property);
@@ -121,7 +125,6 @@ public class RequestConfigImpl implements RequestConfig {
             filters.add(new QFilter("status", QCP.equals, "C"));
             filters.add(new QFilter("enable", QCP.equals, "1"));
             filters.add(new QFilter("number", QCP.equals, configNum));
-
             return BusinessDataServiceHelper.loadSingleFromCache(REQUEST_FORM, filters.toArray(new QFilter[0]));
         });
     }
