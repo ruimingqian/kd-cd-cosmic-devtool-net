@@ -50,6 +50,8 @@ public class RequestConfigImpl implements RequestConfig {
                 if (chopSize != null && chopSize > 0) {
                     logOption.setChopSize(chopSize);
                 }
+            } else {
+                logOption.setRecordFullResponse(false);
             }
             return logOption.clone();
 
