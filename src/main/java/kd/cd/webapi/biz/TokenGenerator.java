@@ -31,15 +31,10 @@ public class TokenGenerator {
         this.tenantId = tenantId;
     }
 
-    public String recacheAccessToken(String phone) {
-        clearCache(phone);
-        return cacheAccessToken(phone);
-    }
-
     public String cacheAccessToken(String phone) {
         String key = this.appId + phone;
         Token token = cache.get(key, Token.class);
-        if (token == null || token.isExpired()) {
+        if (token == null || token.isMeetExpireThreshold() || token.isExpired()) {
             Token newToken = this.newAccessToken(phone);
             cache.put(key, newToken);
             return newToken.getTokenText();
@@ -165,6 +160,7 @@ public class TokenGenerator {
     @Setter
     @NoArgsConstructor
     public static class Token {
+        private static final long THRESHOLD = 300000L;
         private String tokenText;
         private Long expireTime;
 
@@ -180,6 +176,10 @@ public class TokenGenerator {
             } else {
                 throw new KDBizException(json.getString("message"));
             }
+        }
+
+        public boolean isMeetExpireThreshold() {
+            return !isExpired() && expireTime < System.currentTimeMillis() + THRESHOLD;
         }
 
         public boolean isExpired() {
