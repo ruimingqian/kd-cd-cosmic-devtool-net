@@ -68,6 +68,13 @@ public final class OkHttpUtils {
                 JSON.parseObject(bodyString);
     }
 
+    public static <T> T respBodyToBean(Response resp, Class<T> beanClass) throws IOException {
+        String bodyString = respBodyToString(resp);
+        return StringUtils.isEmpty(bodyString) ?
+                null :
+                JSON.parseObject(bodyString, beanClass);
+    }
+
     public static String respBodyToString(Response resp) throws IOException {
         checkResp(resp);
         ResponseBody body = resp.body();

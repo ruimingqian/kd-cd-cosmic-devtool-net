@@ -9,7 +9,6 @@ import kd.cd.webapi.okhttp.SyncSingletonHttpSender;
 import kd.cd.webapi.req.ContentType;
 import kd.cd.webapi.req.Method;
 import kd.cd.webapi.req.RawRequest;
-import kd.cd.webapi.util.SystemPropertyUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,13 +34,17 @@ public class TokenGenerator {
     public String cacheAccessToken(String phone) {
         String key = this.appId + phone;
         Token token = cache.get(key, Token.class);
-        if (token == null || token.isMeetExpireThreshold() || token.isExpired()) {
+        if (token == null || token.isExpired()) {
             Token newToken = this.newAccessToken(phone);
             cache.put(key, newToken);
             return newToken.getTokenText();
         } else {
             return token.getTokenText();
         }
+    }
+
+    public void clearCache(String phone) {
+        cache.remove(this.appId + phone);
     }
 
     @SneakyThrows
@@ -161,7 +164,6 @@ public class TokenGenerator {
     @Setter
     @NoArgsConstructor
     public static class Token {
-        private static final long INTERVAL_THRESHOLD = SystemPropertyUtils.getLong("accesstoken.cache.intervalthreshold", 60000L);
         private String tokenText;
         private Long expireTime;
 
@@ -177,10 +179,6 @@ public class TokenGenerator {
             } else {
                 throw new KDBizException(json.getString("message"));
             }
-        }
-
-        public boolean isMeetExpireThreshold() {
-            return !isExpired() && expireTime < System.currentTimeMillis() + INTERVAL_THRESHOLD;
         }
 
         public boolean isExpired() {

@@ -28,6 +28,11 @@ public class ResponseHandler implements ResponseHandle<Response> {
     }
 
     @Override
+    public <T> T bodyToBean(Class<T> beanClass) throws IOException {
+        return respBodyToBean(resp, beanClass);
+    }
+
+    @Override
     public byte[] bodyToBytes() throws IOException {
         return respBodyToBytes(resp);
     }

@@ -13,6 +13,8 @@ public interface ResponseHandle<R> {
 
     JSONObject bodyToJson() throws IOException;
 
+    <T> T bodyToBean(Class<T> beanClass) throws IOException;
+
     byte[] bodyToBytes() throws IOException;
 
     InputStream bodyToInputStream() throws IOException;
