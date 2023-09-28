@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class TokenGenerator {
     private static final IAppCache cache = AppCache.get("TOKEN");
-    private static final long INTERVAL_THRESHOLD = SystemPropertyUtils.getLong("accesstoken.cache.intervalthreshold", 60000L);
     private final String appId;
     private final String appSecuret;
     private final String domainUrl;
@@ -36,17 +35,13 @@ public class TokenGenerator {
     public String cacheAccessToken(String phone) {
         String key = this.appId + phone;
         Token token = cache.get(key, Token.class);
-        if (token == null || isMeetExpireThreshold(token.getExpireTime())) {
+        if (token == null || token.isMeetExpireThreshold() || token.isExpired()) {
             Token newToken = this.newAccessToken(phone);
             cache.put(key, newToken);
             return newToken.getTokenText();
         } else {
             return token.getTokenText();
         }
-    }
-
-    private static boolean isMeetExpireThreshold(long expiredTime) {
-        return System.currentTimeMillis() > expiredTime + INTERVAL_THRESHOLD;
     }
 
     @SneakyThrows
@@ -166,6 +161,7 @@ public class TokenGenerator {
     @Setter
     @NoArgsConstructor
     public static class Token {
+        private static final long INTERVAL_THRESHOLD = SystemPropertyUtils.getLong("accesstoken.cache.intervalthreshold", 60000L);
         private String tokenText;
         private Long expireTime;
 
@@ -181,6 +177,14 @@ public class TokenGenerator {
             } else {
                 throw new KDBizException(json.getString("message"));
             }
+        }
+
+        public boolean isMeetExpireThreshold() {
+            return !isExpired() && expireTime < System.currentTimeMillis() + INTERVAL_THRESHOLD;
+        }
+
+        public boolean isExpired() {
+            return System.currentTimeMillis() >= expireTime;
         }
     }
 }
