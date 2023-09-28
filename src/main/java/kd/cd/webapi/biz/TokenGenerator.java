@@ -31,6 +31,11 @@ public class TokenGenerator {
         this.tenantId = tenantId;
     }
 
+    public String recacheAccessToken(String phone) {
+        clearCache(phone);
+        return cacheAccessToken(phone);
+    }
+
     public String cacheAccessToken(String phone) {
         String key = this.appId + phone;
         Token token = cache.get(key, Token.class);
