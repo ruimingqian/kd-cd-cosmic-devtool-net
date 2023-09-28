@@ -10,17 +10,28 @@ import kd.cd.webapi.req.ContentType;
 import kd.cd.webapi.req.Method;
 import kd.cd.webapi.req.RawRequest;
 import kd.cd.webapi.util.SystemPropertyUtils;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 
-@Builder
 public class TokenGenerator {
     private static final IAppCache cache = AppCache.get("TOKEN");
     private static final long INTERVAL_THRESHOLD = SystemPropertyUtils.getLong("accesstoken.cache.intervalthreshold", 60000L);
     private final String appId;
     private final String appSecuret;
-    private String domainUrl;
-    private String accountId;
-    private String tenantId;
+    private final String domainUrl;
+    private final String accountId;
+    private final String tenantId;
+
+    TokenGenerator(String appId, String appSecuret, String domainUrl, String accountId, String tenantId) {
+        this.appId = appId;
+        this.appSecuret = appSecuret;
+        this.domainUrl = domainUrl;
+        this.accountId = accountId;
+        this.tenantId = tenantId;
+    }
 
     public String cacheAccessToken(String phone) {
         String key = this.appId + phone;
@@ -64,7 +75,6 @@ public class TokenGenerator {
 
     @SneakyThrows
     public Token newAppToken() {
-        init();
         JSONObject json = new JSONObject(5);
         json.put("appId", appId);
         json.put("appSecuret", appSecuret);
@@ -86,17 +96,69 @@ public class TokenGenerator {
         return new Token(resp, "app_token");
     }
 
-    private void init() {
-        RequestContext ctx = RequestContext.get();
-        if (domainUrl == null) {
-            String path = ctx.getClientFullContextPath();
-            domainUrl = path.substring(0, path.length() - 1);
+    public static TokenGeneratorBuilder builder() {
+        return new TokenGeneratorBuilder();
+    }
+
+    public static class TokenGeneratorBuilder {
+        private String appId;
+        private String appSecuret;
+        private String domainUrl;
+        private String accountId;
+        private String tenantId;
+
+        TokenGeneratorBuilder() {
         }
-        if (tenantId == null) {
-            tenantId = ctx.getTenantId();
+
+        public TokenGeneratorBuilder appId(String appId) {
+            this.appId = appId;
+            return this;
         }
-        if (accountId == null) {
-            accountId = ctx.getAccountId();
+
+        public TokenGeneratorBuilder appSecuret(String appSecuret) {
+            this.appSecuret = appSecuret;
+            return this;
+        }
+
+        public TokenGeneratorBuilder domainUrl(String domainUrl) {
+            this.domainUrl = domainUrl;
+            return this;
+        }
+
+        public TokenGeneratorBuilder accountId(String accountId) {
+            this.accountId = accountId;
+            return this;
+        }
+
+        public TokenGeneratorBuilder tenantId(String tenantId) {
+            this.tenantId = tenantId;
+            return this;
+        }
+
+        public TokenGenerator build() {
+            init();
+            return new TokenGenerator(this.appId, this.appSecuret, this.domainUrl, this.accountId, this.tenantId);
+        }
+
+        private void init() {
+            if (StringUtils.isBlank(appId) || StringUtils.isBlank(appSecuret)) {
+                throw new IllegalArgumentException("appId and appSecuret is required");
+            }
+            RequestContext ctx = RequestContext.get();
+            if (domainUrl == null) {
+                String path = ctx.getClientFullContextPath();
+                domainUrl = path.substring(0, path.length() - 1);
+            }
+            if (tenantId == null) {
+                tenantId = ctx.getTenantId();
+            }
+            if (accountId == null) {
+                accountId = ctx.getAccountId();
+            }
+        }
+
+        public String toString() {
+            return "TokenGenerator.TokenGeneratorBuilder(appId=" + this.appId + ", appSecuret=" + this.appSecuret + ", domainUrl=" + this.domainUrl + ", accountId=" + this.accountId + ", tenantId=" + this.tenantId + ")";
         }
     }
 
