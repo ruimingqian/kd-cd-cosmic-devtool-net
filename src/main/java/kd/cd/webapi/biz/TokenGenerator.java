@@ -139,11 +139,6 @@ public class TokenGenerator {
         }
 
         public TokenGenerator build() {
-            init();
-            return new TokenGenerator(this.appId, this.appSecuret, this.domainUrl, this.accountId, this.tenantId);
-        }
-
-        private void init() {
             if (StringUtils.isBlank(appId) || StringUtils.isBlank(appSecuret)) {
                 throw new IllegalArgumentException("appId and appSecuret is required");
             }
@@ -158,6 +153,7 @@ public class TokenGenerator {
             if (accountId == null) {
                 accountId = ctx.getAccountId();
             }
+            return new TokenGenerator(this.appId, this.appSecuret, this.domainUrl, this.accountId, this.tenantId);
         }
 
         public String toString() {
