@@ -9,7 +9,7 @@ public interface RequestConfig {
 
     LogOption logOption();
 
-    Integer chompSize();
+    Integer chopSize();
 
     String getCustomParam(String key);
 
