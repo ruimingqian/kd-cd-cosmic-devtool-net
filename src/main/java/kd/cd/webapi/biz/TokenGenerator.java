@@ -35,10 +35,10 @@ public class TokenGenerator {
         return cacheAccessToken(phone, 300000L);
     }
 
-    public String cacheAccessToken(String phone, long threshold) {
+    public String cacheAccessToken(String phone, long thresholdMillis) {
         String key = this.appId + phone;
         Token token = cache.get(key, Token.class);
-        if (token == null || token.isMeetExpireThreshold(threshold) || token.isExpired()) {
+        if (token == null || token.isMeetExpireThreshold(thresholdMillis) || token.isExpired()) {
             Token newToken = this.newAccessToken(phone);
             cache.put(key, newToken);
             return newToken.getTokenText();
