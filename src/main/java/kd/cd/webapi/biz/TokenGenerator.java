@@ -41,9 +41,9 @@ public class TokenGenerator {
         if (token == null || token.isMeetExpireThreshold(thresholdMillis) || token.isExpired()) {
             Token newToken = this.newAccessToken(phone);
             cache.put(key, newToken);
-            return newToken.getTokenText();
+            return newToken.getContent();
         } else {
-            return token.getTokenText();
+            return token.getContent();
         }
     }
 
@@ -55,7 +55,7 @@ public class TokenGenerator {
     public Token newAccessToken(String phone) {
         JSONObject json = new JSONObject(6);
         json.put("user", phone);
-        json.put("apptoken", newAppToken().getTokenText());
+        json.put("apptoken", newAppToken().getContent());
         json.put("tenantid", tenantId);
         json.put("accountId", accountId);
         json.put("usertype", "Mobile");
@@ -164,14 +164,14 @@ public class TokenGenerator {
     @Setter
     @NoArgsConstructor
     public static class Token {
-        private String tokenText;
+        private String content;
         private Long expireTime;
 
         public Token(JSONObject json, String type) {
             if (Boolean.TRUE.equals(json.getBoolean("status"))) {
                 JSONObject data = (JSONObject) json.get("data");
                 if (Boolean.TRUE.equals(data.getBoolean("success"))) {
-                    this.tokenText = data.getString(type);
+                    this.content = data.getString(type);
                     this.expireTime = data.getLong("expire_time");
                 } else {
                     throw new KDBizException(json.getString("message"));
