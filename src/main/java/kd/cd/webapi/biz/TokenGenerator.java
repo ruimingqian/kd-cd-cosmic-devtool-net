@@ -68,8 +68,8 @@ public class TokenGenerator {
                 .reqString(json.toString())
                 .build();
 
-        JSONObject resp = SyncSingletonHttpSender.require()
-                .sendRaw(rawRequest)
+        JSONObject resp = SyncSingletonHttpSender.get()
+                .sendRequest(rawRequest)
                 .bodyToJson();
 
         return new Token(resp, "access_token");
@@ -91,8 +91,8 @@ public class TokenGenerator {
                 .reqString(json.toString())
                 .build();
 
-        JSONObject resp = SyncSingletonHttpSender.require()
-                .sendRaw(rawRequest)
+        JSONObject resp = SyncSingletonHttpSender.get()
+                .sendRequest(rawRequest)
                 .bodyToJson();
 
         return new Token(resp, "app_token");

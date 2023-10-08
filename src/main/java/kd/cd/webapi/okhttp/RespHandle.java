@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public interface ResponseHandle<R> {
+public interface RespHandle<R> {
     R response();
 
     String bodyToString() throws IOException;

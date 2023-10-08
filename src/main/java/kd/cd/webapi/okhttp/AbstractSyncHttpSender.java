@@ -1,8 +1,6 @@
 package kd.cd.webapi.okhttp;
 
-import kd.cd.webapi.req.FormDataRequest;
-import kd.cd.webapi.req.RawRequest;
-import kd.cd.webapi.req.UrlencodeRequest;
+import kd.cd.webapi.req.BaseRequest;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,22 +12,8 @@ import java.util.function.Function;
 public abstract class AbstractSyncHttpSender<T> implements SyncHttpSend<T> {
     protected OkHttpClient client;
 
-    @Override
-    public T sendRaw(RawRequest rawRequest) throws IOException {
-        Request req = RequestFactory.newRawRequest(rawRequest);
-        return syncCall(req, respHandelFunction());
-    }
-
-    @Override
-    public T sendUrlencoded(UrlencodeRequest urlencodeRequest) throws IOException {
-        Request req = RequestFactory.newUrlencodedRequest(urlencodeRequest);
-        return syncCall(req, respHandelFunction());
-    }
-
-    @Override
-    public T sendFormData(FormDataRequest formDataRequest) throws IOException {
-        Request req = RequestFactory.newFormDataRequest(formDataRequest);
-        return syncCall(req, respHandelFunction());
+    public T sendRequest(BaseRequest baseRequest) throws IOException {
+        return syncCall(baseRequest.adapt(), respHandelFunction());
     }
 
     abstract Function<Response, T> respHandelFunction();

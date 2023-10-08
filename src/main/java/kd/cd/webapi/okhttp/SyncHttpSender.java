@@ -6,7 +6,7 @@ import okhttp3.Response;
 
 import java.util.function.Function;
 
-public class SyncHttpSender extends AbstractSyncHttpSender<ResponseHandle<Response>> {
+public class SyncHttpSender extends AbstractSyncHttpSender<RespHandle<Response>> {
     SyncHttpSender() {
     }
 
@@ -19,7 +19,7 @@ public class SyncHttpSender extends AbstractSyncHttpSender<ResponseHandle<Respon
     }
 
     @Override
-    Function<Response, ResponseHandle<Response>> respHandelFunction() {
+    Function<Response, RespHandle<Response>> respHandelFunction() {
         return ResponseHandler::new;
     }
 

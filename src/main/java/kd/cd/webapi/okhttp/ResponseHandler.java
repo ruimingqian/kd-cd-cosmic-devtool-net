@@ -10,7 +10,7 @@ import java.io.OutputStream;
 
 import static kd.cd.webapi.util.OkHttpUtils.*;
 
-public class ResponseHandler implements ResponseHandle<Response> {
+public class ResponseHandler implements RespHandle<Response> {
     private final Response resp;
 
     public ResponseHandler(Response response) {

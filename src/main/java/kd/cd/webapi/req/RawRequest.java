@@ -2,12 +2,15 @@ package kd.cd.webapi.req;
 
 import kd.cd.webapi.log.LogOption;
 import lombok.Getter;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class RawRequest extends RequestBase {
+public class RawRequest extends AbstractBaseRequest {
     private final String reqString;
 
     private RawRequest(Builder builder) {
@@ -21,6 +24,14 @@ public class RawRequest extends RequestBase {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public Request adapt() {
+        RequestBody body = (method == Method.GET) ?
+                null :
+                RequestBody.create(reqString, MediaType.parse(contentType.getName()));
+        return generateOkHttpRequest(body, contentType);
     }
 
     public static class Builder {

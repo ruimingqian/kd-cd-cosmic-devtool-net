@@ -2,12 +2,14 @@ package kd.cd.webapi.req;
 
 import kd.cd.webapi.log.LogOption;
 import lombok.Getter;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class FormDataRequest extends RequestBase {
+public class FormDataRequest extends AbstractBaseRequest {
     private final Map<String, String> reqMap;
 
     private FormDataRequest(FormDataRequest.Builder builder) {
@@ -20,6 +22,20 @@ public class FormDataRequest extends RequestBase {
 
     public static FormDataRequest.Builder builder() {
         return new FormDataRequest.Builder();
+    }
+
+    @Override
+    public Request adapt() {
+        MultipartBody.Builder builder = new MultipartBody
+                .Builder()
+                .setType(MultipartBody.FORM);
+
+        for (Map.Entry<String, String> entry : reqMap.entrySet()) {
+            builder.addFormDataPart(entry.getKey(), entry.getValue());
+        }
+        MultipartBody multipartBody = builder.build();
+
+        return generateOkHttpRequest(multipartBody, ContentType.TEXT_PLAIN);
     }
 
     public static class Builder {

@@ -14,11 +14,9 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * （2）Socket读写超时时间均默认60s，可在MC系统公共参数项进行配置。如需设置自定义Client参数，请使用{@link SyncHttpSender}
  * <p>
- * （3）Request参数可通过{@link RequestFactory}类生成
+ * （3）传入日志参数{@link LogOption}可记录详细调用日志至系统日志表单
  * <p>
- * （4）传入日志参数{@link LogOption}可记录详细调用日志至系统日志表单
- * <p>
- * （5）调用结果对象{@link ResponseHandler }内置对{@link okhttp3.Response}的各种处理
+ * （4）调用结果对象{@link ResponseHandler }内置对{@link okhttp3.Response}的各种处理
  *
  * <p>
  * <b>示例</b>
@@ -33,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  *
  *         try {
  *             String s = SyncSingletonSender.require()
- *                     .sendRaw(rawRequest)
+ *                     .sendRequest(rawRequest)
  *                     .bodyToString();
  *         } catch (IOException e) {
  *             throw new RuntimeException(e);
@@ -56,7 +54,7 @@ public class SyncSingletonHttpSender extends SyncHttpSender {
         }
     }
 
-    public static SyncSingletonHttpSender require() {
+    public static SyncSingletonHttpSender get() {
         if (sender == null) {
             synchronized (SyncSingletonHttpSender.class) {
                 if (sender == null) {
