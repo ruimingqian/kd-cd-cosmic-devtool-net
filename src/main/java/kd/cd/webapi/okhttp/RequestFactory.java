@@ -36,7 +36,9 @@ public final class RequestFactory {
         String reqString = rawRequest.getReqString();
         ContentType contentType = rawRequest.getContentType();
 
-        RequestBody body = RequestBody.create(reqString, MediaType.parse(contentType.getName()));
+        RequestBody body = (rawRequest.getMethod() == Method.GET) ?
+                null :
+                RequestBody.create(reqString, MediaType.parse(contentType.getName()));
         return generate(body, contentType, rawRequest);
     }
 
@@ -54,7 +56,9 @@ public final class RequestFactory {
             line = line == null ? "" : line;
             String content = URLDecoder.decode(line, StandardCharsets.UTF_8.name());
 
-            RequestBody body = RequestBody.create(content, MediaType.parse(ContentType.APPLICATION_URLENCODED.getName()));
+            RequestBody body = (urlencodeRequest.getMethod() == Method.GET) ?
+                    null :
+                    RequestBody.create(content, MediaType.parse(ContentType.APPLICATION_URLENCODED.getName()));
             return generate(body, ContentType.APPLICATION_URLENCODED, urlencodeRequest);
         }
     }
