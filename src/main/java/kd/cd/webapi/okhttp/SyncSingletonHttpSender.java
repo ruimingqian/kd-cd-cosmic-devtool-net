@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  *                 .build();
  *
  *         try {
- *             String s = SyncSingletonSender.require()
+ *             String s = SyncSingletonHttpSender.get()
  *                     .sendRequest(rawRequest)
  *                     .bodyToString();
  *         } catch (IOException e) {
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * }</pre>
  *
  * @author qrm
- * @version 1.2
+ * @version 1.3
  * @see AbstractSyncHttpSender
  */
 public class SyncSingletonHttpSender extends SyncHttpSender {
