@@ -35,7 +35,7 @@ public class UrlencodeRequest extends AbstractBaseRequest {
     }
 
     @Override
-    public Request adapt() throws IOException {
+    public Request convert() throws IOException {
         List<BasicNameValuePair> list = new ArrayList<>(reqMap.size());
         reqMap.forEach((key, value) -> list.add(new BasicNameValuePair(key, value)));
 

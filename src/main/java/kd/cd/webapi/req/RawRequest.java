@@ -27,7 +27,7 @@ public class RawRequest extends AbstractBaseRequest {
     }
 
     @Override
-    public Request adapt() {
+    public Request convert() {
         RequestBody body = (method == Method.GET) ?
                 null :
                 RequestBody.create(reqString, MediaType.parse(contentType.getName()));

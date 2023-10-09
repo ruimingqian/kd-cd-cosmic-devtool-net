@@ -25,7 +25,7 @@ public class FormDataRequest extends AbstractBaseRequest {
     }
 
     @Override
-    public Request adapt() {
+    public Request convert() {
         MultipartBody.Builder builder = new MultipartBody
                 .Builder()
                 .setType(MultipartBody.FORM);

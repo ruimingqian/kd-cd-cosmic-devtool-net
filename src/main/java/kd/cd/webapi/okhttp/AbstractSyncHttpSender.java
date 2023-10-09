@@ -13,7 +13,7 @@ public abstract class AbstractSyncHttpSender<T> implements SyncHttpSend<T> {
     protected OkHttpClient client;
 
     public T sendRequest(BaseRequest baseRequest) throws IOException {
-        return syncCall(baseRequest.adapt(), respHandelFunction());
+        return syncCall(baseRequest.convert(), respHandelFunction());
     }
 
     abstract Function<Response, T> respHandelFunction();

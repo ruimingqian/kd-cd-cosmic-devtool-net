@@ -5,5 +5,5 @@ import okhttp3.Request;
 import java.io.IOException;
 
 public interface BaseRequest {
-    Request adapt() throws IOException;
+    Request convert() throws IOException;
 }
