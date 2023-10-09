@@ -20,7 +20,7 @@ public abstract class AbstractSyncHttpSender<T> implements SyncHttpSend<T> {
 
     T syncCall(Request req, Function<Response, T> function) throws IOException {
         if (client == null) {
-            client = defaultBuilder().build();
+            client = defaultClientBuilder().build();
         }
         Call call = client.newCall(req);
         Response resp = call.execute();
@@ -28,5 +28,5 @@ public abstract class AbstractSyncHttpSender<T> implements SyncHttpSend<T> {
         return function.apply(resp);
     }
 
-    abstract OkHttpClient.Builder defaultBuilder();
+    abstract OkHttpClient.Builder defaultClientBuilder();
 }

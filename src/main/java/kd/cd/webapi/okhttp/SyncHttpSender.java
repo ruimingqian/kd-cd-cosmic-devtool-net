@@ -24,7 +24,7 @@ public class SyncHttpSender extends AbstractSyncHttpSender<RespHandle<Response>>
     }
 
     @Override
-    OkHttpClient.Builder defaultBuilder() {
+    OkHttpClient.Builder defaultClientBuilder() {
         return OkHttpUtils.newDefaultCustomizedBuilder();
     }
 }

@@ -66,8 +66,8 @@ public class SyncSingletonHttpSender extends SyncHttpSender {
     }
 
     @Override
-    OkHttpClient.Builder defaultBuilder() {
-        OkHttpClient.Builder builder = super.defaultBuilder();
+    OkHttpClient.Builder defaultClientBuilder() {
+        OkHttpClient.Builder builder = super.defaultClientBuilder();
         //create a larger connection pool for sigleton instance
         ConnectionPool pool = new ConnectionPool(SINGLETON_CONNECTPOOL_SIZE, SINGLETON_KEEPALIVE_MINUTES, TimeUnit.MINUTES);
         builder.connectionPool(pool);
