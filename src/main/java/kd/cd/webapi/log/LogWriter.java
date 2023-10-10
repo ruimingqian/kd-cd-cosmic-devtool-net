@@ -122,6 +122,7 @@ public class LogWriter {
             o.set("username", rc.getUserName());
             o.set("ip", rc.getLoginIP());
             o.set("tenantid", rc.getTenantCode());
+            o.set("accountid", rc.getAccountId());
             o.set("client", rc.getClient());
             o.set("traceid", rc.getTraceId());
         }
