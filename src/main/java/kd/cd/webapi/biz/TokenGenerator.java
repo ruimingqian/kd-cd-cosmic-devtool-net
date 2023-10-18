@@ -12,12 +12,11 @@ import kd.cd.webapi.req.Method;
 import kd.cd.webapi.req.RawRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 
 public class TokenGenerator {
-    private static final IAppCache cache = AppCache.get("TOKEN");
+    private static final IAppCache cache = AppCache.get("COSMIC_TOKEN");
     private final String appId;
     private final String appSecuret;
     private final String domainUrl;
@@ -38,30 +37,30 @@ public class TokenGenerator {
 
     public String cacheAccessToken(String phone, long thresholdMillis) {
         String key = this.appId + phone;
-        Token token = cache.get(key, Token.class);
+        CosmicToken token = getRealTimeCachedToken(key);
 
-        if (cachedTokenIsInvalid(token, thresholdMillis)) {
+        if (token == null || token.isMeetExpireThreshold(thresholdMillis) || token.isExpired()) {
             try (DLock lock = DLock.create(key)) {
                 lock.lock();
 
-                if (cachedTokenIsInvalid(token, thresholdMillis)) {
+                token = getRealTimeCachedToken(key);
+                if (token == null || token.isMeetExpireThreshold(thresholdMillis) || token.isExpired()) {
                     Token newToken = this.newAccessToken(phone);
                     cache.put(key, newToken);
                     return newToken.getContent();
+
+                } else {
+                    return token.getContent();
                 }
             }
+
+        } else {
+            return token.getContent();
         }
-        return token.getContent();
     }
 
-    private static boolean cachedTokenIsInvalid(Token token, long thresholdMillis) {
-        return token == null
-                || token.isMeetExpireThreshold(thresholdMillis)
-                || token.isExpired();
-    }
-
-    public void clearCache(String phone) {
-        cache.remove(this.appId + phone);
+    private static CosmicToken getRealTimeCachedToken(String key) {
+        return cache.get(key, CosmicToken.class);
     }
 
     @SneakyThrows
@@ -85,7 +84,7 @@ public class TokenGenerator {
                 .sendRequest(rawRequest)
                 .bodyToJson();
 
-        return new Token(resp, "access_token");
+        return new CosmicToken(resp, "access_token");
     }
 
     @SneakyThrows
@@ -108,7 +107,7 @@ public class TokenGenerator {
                 .sendRequest(rawRequest)
                 .bodyToJson();
 
-        return new Token(resp, "app_token");
+        return new CosmicToken(resp, "app_token");
     }
 
     public static TokenGeneratorBuilder builder() {
@@ -174,13 +173,12 @@ public class TokenGenerator {
     }
 
     @Getter
-    @Setter
     @NoArgsConstructor
-    public static class Token {
+    public static class CosmicToken implements Token {
         private String content;
         private Long expireTime;
 
-        public Token(JSONObject json, String type) {
+        public CosmicToken(JSONObject json, String type) {
             if (Boolean.TRUE.equals(json.getBoolean("status"))) {
                 JSONObject data = (JSONObject) json.get("data");
                 if (Boolean.TRUE.equals(data.getBoolean("success"))) {
