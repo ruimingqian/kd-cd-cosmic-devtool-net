@@ -2,6 +2,7 @@ package kd.cd.webapi.biz;
 
 import com.alibaba.fastjson.JSONObject;
 import kd.bos.context.RequestContext;
+import kd.bos.dlock.DLock;
 import kd.bos.entity.cache.AppCache;
 import kd.bos.entity.cache.IAppCache;
 import kd.bos.exception.KDBizException;
@@ -38,13 +39,25 @@ public class TokenGenerator {
     public String cacheAccessToken(String phone, long thresholdMillis) {
         String key = this.appId + phone;
         Token token = cache.get(key, Token.class);
-        if (token == null || token.isMeetExpireThreshold(thresholdMillis) || token.isExpired()) {
-            Token newToken = this.newAccessToken(phone);
-            cache.put(key, newToken);
-            return newToken.getContent();
-        } else {
-            return token.getContent();
+
+        if (cachedTokenIsInvalid(token, thresholdMillis)) {
+            try (DLock lock = DLock.create(key)) {
+                lock.lock();
+
+                if (cachedTokenIsInvalid(token, thresholdMillis)) {
+                    Token newToken = this.newAccessToken(phone);
+                    cache.put(key, newToken);
+                    return newToken.getContent();
+                }
+            }
         }
+        return token.getContent();
+    }
+
+    private static boolean cachedTokenIsInvalid(Token token, long thresholdMillis) {
+        return token == null
+                || token.isMeetExpireThreshold(thresholdMillis)
+                || token.isExpired();
     }
 
     public void clearCache(String phone) {
